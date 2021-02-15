@@ -25,63 +25,96 @@ namespace ALLinOneRename
 
         private void BtnRenameVTwo_Click(object sender, EventArgs e)
         {
-            int[] numFilter = { 15 };
+            int[] numFilter;
             bool needFilter = false;
 
             string usersPath = TbxPath.Text;
+            if (usersPath[usersPath.Length - 1] != '\\')
+                usersPath += '\\';
+
+            if (TbxFilterNumbers.Text != "")
+            {
+                string[] stringToNum;
+
+                needFilter = true;
+                stringToNum = TbxFilterNumbers.Text.Split(' ');
+                numFilter = new int[stringToNum.Length];
+                for(int i = 0; i < stringToNum.Length; i++)
+                {
+                    if (stringToNum[i] == "")
+                        continue;
+                    numFilter[i] = Convert.ToInt32(stringToNum[i]);
+                }
+                
+            }
+            else
+            {
+                numFilter = new int[0];
+            }
 
             //get the directory info files and check if there is a path
             DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
             FileInfo[] infos = directoryInfo.GetFiles();
-            
+            bool renameSuccess = true;
             foreach (FileInfo fileInfo in infos)
             {
-                try
+
+                if (!IsFileLocked(fileInfo))
                 {
-                    if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
-                        goto END;
-
-                    string filterNumbers = null; // numbers that will be filtered
-
-                    string fileType;
-
-                    string numberSide = "";
-
-                    string seriesName = fileInfo.Directory.Parent.Name;
-                    string newPath;
-                    string finalName;
-                    string seasonNum;
-
-                    int numberFromTheString;
-                    fileType = '.' + fileInfo.Name.Split('.')[fileInfo.Name.Split('.').Length - 1];
-
-                    string seasonWithNumber = fileInfo.Directory.Name;
-                    string[] seasonAndNumberSplited = seasonWithNumber.Split(' ');
-
-                    if (seasonAndNumberSplited[0].ToLower() == "season")
+                    try
                     {
-                        numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
-                        seasonNum = seasonAndNumberSplited[1];
+                        if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
+                            goto END;               //filter file names
 
-                        finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
+                        string filterNumbers = null;//numbers that will be filtered
 
-                        File.Move(fileInfo.FullName, usersPath + finalName + fileType);
+                        string fileType;            //current file's type
 
-                        RtbRenamedText.Text += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
+                        string numberSide = "";     //checks if the number is first
+
+                        string seriesName = fileInfo.Directory.Parent.Name;//the Series name of the current file
+                        string seasonNum;                                  //Season number of the current file
+
+                        fileType = '.' + fileInfo.Name.Split('.')[fileInfo.Name.Split('.').Length - 1];//getting the file type - it's after the last dot
+
+                        string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
+
+                        if (seasonAndNumberSplited[0].ToLower() == "season")
+                        {
+                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
+                            seasonNum = seasonAndNumberSplited[1];
+
+                            string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
+
+                            File.Move(fileInfo.FullName, usersPath + finalName + fileType);
+
+                            RtbRenamedText.SelectionColor = Color.Blue;
+                            RtbRenamedText.SelectedText += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
+                        }
+
+                        else
+                        {
+                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
+                        }
                     }
-
-                    else
+                    catch (IOException)
                     {
-                        numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
+                        renameSuccess = false;
+                        RtbRenamedText.SelectionColor = Color.Red;
+                        RtbRenamedText.SelectedText = fileInfo.Name + " Already exist";
                     }
+                END:;
                 }
-                catch (IOException)
+                else
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(fileInfo.Name + " Already exist");
-                    Console.ResetColor();
+                    RtbRenamedText.SelectionColor = Color.Red;
+                    RtbRenamedText.SelectedText = fileInfo.Name + "Is being used";
                 }
-            END:;
+            }
+            if (renameSuccess)
+            {
+                RtbRenamedText.SelectionColor = Color.Green;
+                RtbRenamedText.SelectedText = "Done Successfully" + Environment.NewLine;
             }
 
             string CreateFinalName(int numberFromTheString, string seasonNum, string seriesName)
@@ -206,5 +239,28 @@ namespace ALLinOneRename
 
         }
 
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
+        }
     }
+
 }
+

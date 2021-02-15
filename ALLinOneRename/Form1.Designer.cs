@@ -36,6 +36,9 @@ namespace ALLinOneRename
             this.label1 = new System.Windows.Forms.Label();
             this.RtbRenamedText = new System.Windows.Forms.RichTextBox();
             this.TbxPath = new System.Windows.Forms.TextBox();
+            this.TbxFilterNumbers = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -101,11 +104,39 @@ namespace ALLinOneRename
             this.TbxPath.Size = new System.Drawing.Size(357, 20);
             this.TbxPath.TabIndex = 6;
             // 
+            // TbxFilterNumbers
+            // 
+            this.TbxFilterNumbers.Location = new System.Drawing.Point(585, 153);
+            this.TbxFilterNumbers.Name = "TbxFilterNumbers";
+            this.TbxFilterNumbers.Size = new System.Drawing.Size(100, 20);
+            this.TbxFilterNumbers.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(691, 157);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(74, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Filter Numbers";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(582, 186);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(94, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "separate by space";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.TbxFilterNumbers);
             this.Controls.Add(this.TbxPath);
             this.Controls.Add(this.RtbRenamedText);
             this.Controls.Add(this.label1);
@@ -129,6 +160,9 @@ namespace ALLinOneRename
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox RtbRenamedText;
         private System.Windows.Forms.TextBox TbxPath;
+        private System.Windows.Forms.TextBox TbxFilterNumbers;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
 
