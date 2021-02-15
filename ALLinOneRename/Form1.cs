@@ -13,9 +13,6 @@ namespace ALLinOneRename
 {
     public partial class Form1 : Form
     {
-        int[] numFilter;
-        bool needFilter = false;
-
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +25,9 @@ namespace ALLinOneRename
 
         private void BtnRenameVTwo_Click(object sender, EventArgs e)
         {
+            int[] numFilter = { 15 };
+            bool needFilter = false;
+
             string usersPath = TbxPath.Text;
 
             //get the directory info files and check if there is a path
@@ -65,9 +65,9 @@ namespace ALLinOneRename
 
                         finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
 
-                        // File.Move(fileInfo.FullName, usersPath + finalName + fileType);
+                        File.Move(fileInfo.FullName, usersPath + finalName + fileType);
 
-                        Console.WriteLine("{0} Complete \\\\ {1}", numberFromTheString.ToString(), fileInfo.Name);
+                        RtbRenamedText.Text += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
                     }
 
                     else
