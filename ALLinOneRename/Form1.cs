@@ -20,7 +20,184 @@ namespace ALLinOneRename
 
         private void BtnRenameVOne_Click(object sender, EventArgs e)
         {
+            int[] numFilter;
+            bool needFilter = false;
 
+            string usersPath = TbxPath.Text;
+            if (usersPath[usersPath.Length - 1] != '\\')
+                usersPath += '\\';
+
+            if (TbxFilterNumbersV1.Text != "")
+            {
+                string[] stringToNum;
+
+                needFilter = true;
+                stringToNum = TbxFilterNumbersV1.Text.Split(' ');
+                numFilter = new int[stringToNum.Length];
+                for (int i = 0; i < stringToNum.Length; i++)
+                {
+                    if (stringToNum[i] == "")
+                        continue;
+                    numFilter[i] = Convert.ToInt32(stringToNum[i]);
+                }
+
+            }
+            else
+            {
+                numFilter = new int[0];//compile error if not this
+            }
+
+            bool isNumberFirst = CbxIsNumberFirstV1.Checked;
+            string numberSide;
+            if (isNumberFirst)
+            {
+                numberSide = "f";//number is first
+            }
+            else
+            {
+                numberSide = ""; //not first
+            }
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
+            FileInfo[] infos = directoryInfo.GetFiles();
+
+            bool renameSuccess = true;
+
+            foreach (FileInfo fileInfo in infos)
+            {
+                try
+                {
+                    if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
+                        goto END;   //filter file names
+
+                    string fileType;//current file's type
+                    fileType = '.' + fileInfo.Name.Split('.')[fileInfo.Name.Split('.').Length - 1];//getting the file type - it's after the last dot
+
+                    int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
+
+                    File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileType);
+
+                    SetCursorDown();
+
+                    RtbRenamedText.SelectionColor = Color.Blue;
+                    RtbRenamedText.SelectedText += fileInfo.Name + " Complete --> " + numberFromTheString.ToString() + Environment.NewLine;
+                    RtbRenamedText.ScrollToCaret();
+                }
+                catch (IOException)
+                {
+                    renameSuccess = false;
+
+                    SetCursorDown();
+
+                    RtbRenamedText.SelectionColor = Color.Red;
+                    RtbRenamedText.SelectedText = fileInfo.Name + " Already exist" + Environment.NewLine;
+                    RtbRenamedText.ScrollToCaret();
+                }
+            END:;
+            }
+            if (renameSuccess)
+            {
+                SetCursorDown();
+
+                RtbRenamedText.SelectionColor = Color.Green;
+                RtbRenamedText.SelectedText = "Done Successfully" + Environment.NewLine;
+            }
+
+            int GetNumberOutOfString(string File_name, string file_type, string Side)
+            {
+                // j is current index of the file_name 
+                int converted = 0;
+                //if we find a number that is episode then i++ happen so we save the episode number and 
+                //on the next run when it find a season number or resoulution number it will go to 0 on the next int not on the
+                //episode number itself
+                int numbers_together = 0;
+                //when he find number he start to count so that it won't check if statment IF he is not at least 1 number
+                int number_holder = -1;
+                //hold a number if it's the only number then 
+                string numbers = null;
+                for (int j = 0; j < File_name.Length; j++)
+                {
+                    switch (File_name[j])
+                    {
+                        case '0':
+                        case '1':
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
+                            numbers_together++;
+                            numbers += File_name[j];//start recording the numbers if they are found
+                            break;
+                        default:
+                            if (numbers_together != 0)
+                            {
+                                if (Side == "f")
+                                    return Convert.ToInt32(numbers);
+                                if (numbers + file_type == File_name)
+                                {
+                                    converted = Convert.ToInt32(numbers);
+                                    number_holder = 0;
+                                    goto END;           //if file is just a number then returns that number
+                                }
+                                if (numbers == "0")
+                                    number_holder = 0;
+                                if (needFilter)
+                                {
+                                    for (int i = 0; i < numFilter.Length; i++)
+                                    {
+                                        if (numFilter[i] == Convert.ToInt32(numbers))
+                                        {
+                                            if (number_holder == 0)
+                                            {
+                                                goto END;
+                                            }
+                                            number_holder = Convert.ToInt32(numbers);
+                                            goto END;
+                                        }
+                                    }
+                                }
+                                switch (numbers)
+                                {
+                                    case "1":
+                                    case "2":
+                                    case "3":
+                                    case "4":
+                                    case "5":
+                                    case "6":
+                                    case "7":
+                                    case "8":
+                                    case "9":
+                                    case "640":
+                                    case "720":
+                                    case "1080":
+                                    case "1920":
+                                    case "2160":
+                                    case "2010":
+                                        if (number_holder == 0)
+                                        {
+                                            goto END;
+                                        }
+                                        number_holder = Convert.ToInt32(numbers);
+                                        goto END;
+                                }
+                                converted = Convert.ToInt32(numbers);
+                            END:;
+                                numbers = null;
+                            }
+                            numbers_together = 0;
+                            break;
+                    }
+                }
+                if (converted + number_holder == number_holder)
+                    return number_holder;
+                //converted + num = num that means that the season or resolution filter worked but was not necessery
+
+                return converted;
+            }
         }
 
         private void BtnRenameVTwo_Click(object sender, EventArgs e)
@@ -32,12 +209,12 @@ namespace ALLinOneRename
             if (usersPath[usersPath.Length - 1] != '\\')
                 usersPath += '\\';
 
-            if (TbxFilterNumbers.Text != "")
+            if (TbxFilterNumbersV2.Text != "")
             {
                 string[] stringToNum;
 
                 needFilter = true;
-                stringToNum = TbxFilterNumbers.Text.Split(' ');
+                stringToNum = TbxFilterNumbersV2.Text.Split(' ');
                 numFilter = new int[stringToNum.Length];
                 for(int i = 0; i < stringToNum.Length; i++)
                 {
@@ -52,7 +229,7 @@ namespace ALLinOneRename
                 numFilter = new int[0];//compile error if not this
             }
 
-            bool isNumberFirst = CbxIsNumberFirst.Checked;
+            bool isNumberFirst = CbxIsNumberFirstV2.Checked;
             string numberSide;
             if (isNumberFirst)
             {
@@ -65,7 +242,9 @@ namespace ALLinOneRename
             //get the directory info files and check if there is a path
             DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
             FileInfo[] infos = directoryInfo.GetFiles();
+
             bool renameSuccess = true;
+
             foreach (FileInfo fileInfo in infos)
             {
 
@@ -97,7 +276,7 @@ namespace ALLinOneRename
                             SetCursorDown();
 
                             RtbRenamedText.SelectionColor = Color.Blue;
-                            RtbRenamedText.SelectedText += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
+                            RtbRenamedText.SelectedText += fileInfo.Name + " Complete --> " + finalName + Environment.NewLine;
                             RtbRenamedText.ScrollToCaret();
                         }
 
@@ -114,7 +293,7 @@ namespace ALLinOneRename
                             SetCursorDown();
 
                             RtbRenamedText.SelectionColor = Color.Blue;
-                            RtbRenamedText.SelectedText += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
+                            RtbRenamedText.SelectedText += fileInfo.Name + " Complete --> " + finalName + Environment.NewLine;
                             RtbRenamedText.ScrollToCaret();
                         }
                     }

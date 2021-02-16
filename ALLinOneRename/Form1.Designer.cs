@@ -36,16 +36,20 @@ namespace ALLinOneRename
             this.label1 = new System.Windows.Forms.Label();
             this.RtbRenamedText = new System.Windows.Forms.RichTextBox();
             this.TbxPath = new System.Windows.Forms.TextBox();
-            this.TbxFilterNumbers = new System.Windows.Forms.TextBox();
+            this.TbxFilterNumbersV2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.CbxIsNumberFirst = new System.Windows.Forms.CheckBox();
+            this.CbxIsNumberFirstV2 = new System.Windows.Forms.CheckBox();
+            this.TbxFilterNumbersV1 = new System.Windows.Forms.TextBox();
+            this.CbxIsNumberFirstV1 = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
             // 
-            this.BtnRenameVOne.Location = new System.Drawing.Point(52, 118);
+            this.BtnRenameVOne.Location = new System.Drawing.Point(52, 108);
             this.BtnRenameVOne.Name = "BtnRenameVOne";
             this.BtnRenameVOne.Size = new System.Drawing.Size(75, 23);
             this.BtnRenameVOne.TabIndex = 0;
@@ -64,7 +68,7 @@ namespace ALLinOneRename
             // 
             // BtnRenameVTwo
             // 
-            this.BtnRenameVTwo.Location = new System.Drawing.Point(585, 124);
+            this.BtnRenameVTwo.Location = new System.Drawing.Point(585, 108);
             this.BtnRenameVTwo.Name = "BtnRenameVTwo";
             this.BtnRenameVTwo.Size = new System.Drawing.Size(75, 23);
             this.BtnRenameVTwo.TabIndex = 2;
@@ -107,17 +111,17 @@ namespace ALLinOneRename
             this.TbxPath.Size = new System.Drawing.Size(357, 20);
             this.TbxPath.TabIndex = 6;
             // 
-            // TbxFilterNumbers
+            // TbxFilterNumbersV2
             // 
-            this.TbxFilterNumbers.Location = new System.Drawing.Point(585, 153);
-            this.TbxFilterNumbers.Name = "TbxFilterNumbers";
-            this.TbxFilterNumbers.Size = new System.Drawing.Size(100, 20);
-            this.TbxFilterNumbers.TabIndex = 7;
+            this.TbxFilterNumbersV2.Location = new System.Drawing.Point(585, 150);
+            this.TbxFilterNumbersV2.Name = "TbxFilterNumbersV2";
+            this.TbxFilterNumbersV2.Size = new System.Drawing.Size(100, 20);
+            this.TbxFilterNumbersV2.TabIndex = 7;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(691, 157);
+            this.label2.Location = new System.Drawing.Point(591, 134);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(74, 13);
             this.label2.TabIndex = 8;
@@ -141,26 +145,65 @@ namespace ALLinOneRename
             this.label4.TabIndex = 10;
             this.label4.Text = "Enter Path";
             // 
-            // CbxIsNumberFirst
+            // CbxIsNumberFirstV2
             // 
-            this.CbxIsNumberFirst.AutoSize = true;
-            this.CbxIsNumberFirst.Location = new System.Drawing.Point(585, 192);
-            this.CbxIsNumberFirst.Name = "CbxIsNumberFirst";
-            this.CbxIsNumberFirst.Size = new System.Drawing.Size(146, 17);
-            this.CbxIsNumberFirst.TabIndex = 11;
-            this.CbxIsNumberFirst.Text = "Number is First in the file?";
-            this.CbxIsNumberFirst.UseVisualStyleBackColor = true;
+            this.CbxIsNumberFirstV2.AutoSize = true;
+            this.CbxIsNumberFirstV2.Location = new System.Drawing.Point(573, 192);
+            this.CbxIsNumberFirstV2.Name = "CbxIsNumberFirstV2";
+            this.CbxIsNumberFirstV2.Size = new System.Drawing.Size(146, 17);
+            this.CbxIsNumberFirstV2.TabIndex = 11;
+            this.CbxIsNumberFirstV2.Text = "Number is First in the file?";
+            this.CbxIsNumberFirstV2.UseVisualStyleBackColor = true;
+            // 
+            // TbxFilterNumbersV1
+            // 
+            this.TbxFilterNumbersV1.Location = new System.Drawing.Point(52, 150);
+            this.TbxFilterNumbersV1.Name = "TbxFilterNumbersV1";
+            this.TbxFilterNumbersV1.Size = new System.Drawing.Size(100, 20);
+            this.TbxFilterNumbersV1.TabIndex = 12;
+            // 
+            // CbxIsNumberFirstV1
+            // 
+            this.CbxIsNumberFirstV1.AutoSize = true;
+            this.CbxIsNumberFirstV1.Location = new System.Drawing.Point(38, 192);
+            this.CbxIsNumberFirstV1.Name = "CbxIsNumberFirstV1";
+            this.CbxIsNumberFirstV1.Size = new System.Drawing.Size(146, 17);
+            this.CbxIsNumberFirstV1.TabIndex = 13;
+            this.CbxIsNumberFirstV1.Text = "Number is First in the file?";
+            this.CbxIsNumberFirstV1.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(53, 176);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(94, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "separate by space";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(53, 134);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(74, 13);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Filter Numbers";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.CbxIsNumberFirst);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.CbxIsNumberFirstV1);
+            this.Controls.Add(this.TbxFilterNumbersV1);
+            this.Controls.Add(this.CbxIsNumberFirstV2);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.TbxFilterNumbers);
+            this.Controls.Add(this.TbxFilterNumbersV2);
             this.Controls.Add(this.TbxPath);
             this.Controls.Add(this.RtbRenamedText);
             this.Controls.Add(this.label1);
@@ -184,11 +227,15 @@ namespace ALLinOneRename
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox RtbRenamedText;
         private System.Windows.Forms.TextBox TbxPath;
-        private System.Windows.Forms.TextBox TbxFilterNumbers;
+        private System.Windows.Forms.TextBox TbxFilterNumbersV2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox CbxIsNumberFirst;
+        private System.Windows.Forms.CheckBox CbxIsNumberFirstV2;
+        private System.Windows.Forms.TextBox TbxFilterNumbersV1;
+        private System.Windows.Forms.CheckBox CbxIsNumberFirstV1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }
 
