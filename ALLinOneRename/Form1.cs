@@ -49,9 +49,19 @@ namespace ALLinOneRename
             }
             else
             {
-                numFilter = new int[0];
+                numFilter = new int[0];//compile error if not this
             }
 
+            bool isNumberFirst = CbxIsNumberFirst.Checked;
+            string numberSide;
+            if (isNumberFirst)
+            {
+                numberSide = "f";//number is first
+            }
+            else
+            {
+                numberSide = ""; //not first
+            }
             //get the directory info files and check if there is a path
             DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
             FileInfo[] infos = directoryInfo.GetFiles();
@@ -67,8 +77,6 @@ namespace ALLinOneRename
                             goto END;               //filter file names
 
                         string fileType;            //current file's type
-
-                        string numberSide = "";     //checks if the number is first
 
                         string seriesName = fileInfo.Directory.Parent.Name;//the Series name of the current file
                         string seasonNum;                                  //Season number of the current file
@@ -90,12 +98,24 @@ namespace ALLinOneRename
 
                             RtbRenamedText.SelectionColor = Color.Blue;
                             RtbRenamedText.SelectedText += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
+                            RtbRenamedText.ScrollToCaret();
                         }
 
                         else //if directory name was not season
                         {
                             int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
 
+                            seasonNum = "1"; //set SeasonNum to 1
+
+                            string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
+
+                            File.Move(fileInfo.FullName, usersPath + finalName + fileType);
+
+                            SetCursorDown();
+
+                            RtbRenamedText.SelectionColor = Color.Blue;
+                            RtbRenamedText.SelectedText += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
+                            RtbRenamedText.ScrollToCaret();
                         }
                     }
                     catch (IOException)
@@ -105,7 +125,8 @@ namespace ALLinOneRename
                         SetCursorDown();
 
                         RtbRenamedText.SelectionColor = Color.Red;
-                        RtbRenamedText.SelectedText = fileInfo.Name + " Already exist";
+                        RtbRenamedText.SelectedText = fileInfo.Name + " Already exist" + Environment.NewLine;
+                        RtbRenamedText.ScrollToCaret();
                     }
                 END:;
                 }
@@ -175,8 +196,7 @@ namespace ALLinOneRename
                         case '8':
                         case '9':
                             numbers_together++;
-                            numbers += File_name[j];
-                            //start recording the numbers if they are found
+                            numbers += File_name[j];//start recording the numbers if they are found
                             break;
                         default:
                             if (numbers_together != 0)
@@ -187,8 +207,7 @@ namespace ALLinOneRename
                                 {
                                     converted = Convert.ToInt32(numbers);
                                     number_holder = 0;
-                                    goto END;
-                                    //if file is just a number then returns that number
+                                    goto END;           //if file is just a number then returns that number
                                 }
                                 if (numbers == "0")
                                     number_holder = 0;
@@ -242,6 +261,7 @@ namespace ALLinOneRename
                 if (converted + number_holder == number_holder)
                     return number_holder;
                 //converted + num = num that means that the season or resolution filter worked but was not necessery
+
                 return converted;
             }
 

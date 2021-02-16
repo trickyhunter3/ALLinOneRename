@@ -40,6 +40,7 @@ namespace ALLinOneRename
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.CbxIsNumberFirst = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -95,7 +96,7 @@ namespace ALLinOneRename
             this.RtbRenamedText.Location = new System.Drawing.Point(190, 81);
             this.RtbRenamedText.Name = "RtbRenamedText";
             this.RtbRenamedText.ReadOnly = true;
-            this.RtbRenamedText.Size = new System.Drawing.Size(357, 183);
+            this.RtbRenamedText.Size = new System.Drawing.Size(357, 357);
             this.RtbRenamedText.TabIndex = 5;
             this.RtbRenamedText.Text = "";
             // 
@@ -140,11 +141,22 @@ namespace ALLinOneRename
             this.label4.TabIndex = 10;
             this.label4.Text = "Enter Path";
             // 
+            // CbxIsNumberFirst
+            // 
+            this.CbxIsNumberFirst.AutoSize = true;
+            this.CbxIsNumberFirst.Location = new System.Drawing.Point(585, 192);
+            this.CbxIsNumberFirst.Name = "CbxIsNumberFirst";
+            this.CbxIsNumberFirst.Size = new System.Drawing.Size(146, 17);
+            this.CbxIsNumberFirst.TabIndex = 11;
+            this.CbxIsNumberFirst.Text = "Number is First in the file?";
+            this.CbxIsNumberFirst.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.CbxIsNumberFirst);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -176,6 +188,7 @@ namespace ALLinOneRename
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox CbxIsNumberFirst;
     }
 }
 
