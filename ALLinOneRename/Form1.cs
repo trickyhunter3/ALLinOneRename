@@ -66,8 +66,6 @@ namespace ALLinOneRename
                         if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
                             goto END;               //filter file names
 
-                        string filterNumbers = null;//numbers that will be filtered
-
                         string fileType;            //current file's type
 
                         string numberSide = "";     //checks if the number is first
@@ -79,7 +77,7 @@ namespace ALLinOneRename
 
                         string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
 
-                        if (seasonAndNumberSplited[0].ToLower() == "season")
+                        if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season 
                         {
                             int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
                             seasonNum = seasonAndNumberSplited[1];
@@ -88,18 +86,24 @@ namespace ALLinOneRename
 
                             File.Move(fileInfo.FullName, usersPath + finalName + fileType);
 
+                            SetCursorDown();
+
                             RtbRenamedText.SelectionColor = Color.Blue;
                             RtbRenamedText.SelectedText += numberFromTheString.ToString() + " Complete \\\\ " + fileInfo.Name + Environment.NewLine;
                         }
 
-                        else
+                        else //if directory name was not season
                         {
                             int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileType, numberSide);
+
                         }
                     }
                     catch (IOException)
                     {
                         renameSuccess = false;
+
+                        SetCursorDown();
+
                         RtbRenamedText.SelectionColor = Color.Red;
                         RtbRenamedText.SelectedText = fileInfo.Name + " Already exist";
                     }
@@ -107,12 +111,16 @@ namespace ALLinOneRename
                 }
                 else
                 {
+                    SetCursorDown();
+
                     RtbRenamedText.SelectionColor = Color.Red;
                     RtbRenamedText.SelectedText = fileInfo.Name + "Is being used";
                 }
             }
             if (renameSuccess)
             {
+                SetCursorDown();
+
                 RtbRenamedText.SelectionColor = Color.Green;
                 RtbRenamedText.SelectedText = "Done Successfully" + Environment.NewLine;
             }
@@ -259,6 +267,12 @@ namespace ALLinOneRename
 
             //file is not locked
             return false;
+        }
+
+        private void SetCursorDown()
+        {
+            RtbRenamedText.SelectionStart = RtbRenamedText.Text.Length;
+            RtbRenamedText.Focus();
         }
     }
 

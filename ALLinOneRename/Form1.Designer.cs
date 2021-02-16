@@ -39,6 +39,7 @@ namespace ALLinOneRename
             this.TbxFilterNumbers = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -53,7 +54,7 @@ namespace ALLinOneRename
             // 
             // BtnSubtractName
             // 
-            this.BtnSubtractName.Location = new System.Drawing.Point(52, 231);
+            this.BtnSubtractName.Location = new System.Drawing.Point(52, 317);
             this.BtnSubtractName.Name = "BtnSubtractName";
             this.BtnSubtractName.Size = new System.Drawing.Size(75, 23);
             this.BtnSubtractName.TabIndex = 1;
@@ -72,7 +73,7 @@ namespace ALLinOneRename
             // 
             // BtnCheckFiles
             // 
-            this.BtnCheckFiles.Location = new System.Drawing.Point(585, 231);
+            this.BtnCheckFiles.Location = new System.Drawing.Point(585, 317);
             this.BtnCheckFiles.Name = "BtnCheckFiles";
             this.BtnCheckFiles.Size = new System.Drawing.Size(75, 23);
             this.BtnCheckFiles.TabIndex = 3;
@@ -90,10 +91,11 @@ namespace ALLinOneRename
             // 
             // RtbRenamedText
             // 
+            this.RtbRenamedText.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RtbRenamedText.Location = new System.Drawing.Point(190, 81);
             this.RtbRenamedText.Name = "RtbRenamedText";
             this.RtbRenamedText.ReadOnly = true;
-            this.RtbRenamedText.Size = new System.Drawing.Size(357, 357);
+            this.RtbRenamedText.Size = new System.Drawing.Size(357, 183);
             this.RtbRenamedText.TabIndex = 5;
             this.RtbRenamedText.Text = "";
             // 
@@ -123,17 +125,27 @@ namespace ALLinOneRename
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(582, 186);
+            this.label3.Location = new System.Drawing.Point(591, 176);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(94, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "separate by space";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(187, 25);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Enter Path";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.TbxFilterNumbers);
@@ -163,6 +175,7 @@ namespace ALLinOneRename
         private System.Windows.Forms.TextBox TbxFilterNumbers;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }
 
