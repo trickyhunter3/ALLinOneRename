@@ -45,6 +45,7 @@ namespace ALLinOneRename
             this.CbxIsNumberFirstV1 = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.TbxSubtractNumber = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -65,6 +66,7 @@ namespace ALLinOneRename
             this.BtnSubtractName.TabIndex = 1;
             this.BtnSubtractName.Text = "Subtract Name";
             this.BtnSubtractName.UseVisualStyleBackColor = true;
+            this.BtnSubtractName.Click += new System.EventHandler(this.BtnSubtractName_Click);
             // 
             // BtnRenameVTwo
             // 
@@ -190,11 +192,19 @@ namespace ALLinOneRename
             this.label6.TabIndex = 15;
             this.label6.Text = "Filter Numbers";
             // 
+            // TbxSubtractNumber
+            // 
+            this.TbxSubtractNumber.Location = new System.Drawing.Point(52, 346);
+            this.TbxSubtractNumber.Name = "TbxSubtractNumber";
+            this.TbxSubtractNumber.Size = new System.Drawing.Size(100, 20);
+            this.TbxSubtractNumber.TabIndex = 16;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.TbxSubtractNumber);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.CbxIsNumberFirstV1);
@@ -236,6 +246,7 @@ namespace ALLinOneRename
         private System.Windows.Forms.CheckBox CbxIsNumberFirstV1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox TbxSubtractNumber;
     }
 }
 
