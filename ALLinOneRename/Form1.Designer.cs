@@ -86,6 +86,7 @@ namespace ALLinOneRename
             this.BtnCheckFiles.TabIndex = 3;
             this.BtnCheckFiles.Text = "Check Files";
             this.BtnCheckFiles.UseVisualStyleBackColor = true;
+            this.BtnCheckFiles.Click += new System.EventHandler(this.BtnCheckFiles_Click);
             // 
             // label1
             // 
