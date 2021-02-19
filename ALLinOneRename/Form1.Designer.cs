@@ -46,6 +46,7 @@ namespace ALLinOneRename
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.TbxSubtractNumber = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -200,11 +201,21 @@ namespace ALLinOneRename
             this.TbxSubtractNumber.Size = new System.Drawing.Size(100, 20);
             this.TbxSubtractNumber.TabIndex = 16;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(1, 286);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(183, 26);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "the file names MUST be just numbers\r\nbefore using this button\r\n";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.TbxSubtractNumber);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -248,6 +259,7 @@ namespace ALLinOneRename
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox TbxSubtractNumber;
+        private System.Windows.Forms.Label label7;
     }
 }
 
