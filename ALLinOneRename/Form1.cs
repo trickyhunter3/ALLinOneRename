@@ -76,7 +76,7 @@ namespace ALLinOneRename
 
                         File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
 
-                        SetCursorDown();
+                        SetCursorDown(RtbRenamedText);
 
                         RtbRenamedText.SelectionColor = Color.Blue;
                         RtbRenamedText.SelectedText += fileInfo.Name + "--> " + numberFromTheString.ToString() + Environment.NewLine;
@@ -86,7 +86,7 @@ namespace ALLinOneRename
                     {
                         renameSuccess = false;
 
-                        SetCursorDown();
+                        SetCursorDown(RtbRenamedText);
 
                         RtbRenamedText.SelectionColor = Color.Red;
                         RtbRenamedText.SelectedText = fileInfo.Name + " Already exist" + Environment.NewLine;
@@ -96,7 +96,7 @@ namespace ALLinOneRename
                 }
                 if (renameSuccess)
                 {
-                    SetCursorDown();
+                    SetCursorDown(RtbRenamedText);
 
                     RtbRenamedText.SelectionColor = Color.Green;
                     RtbRenamedText.SelectedText = "Done Successfully" + Environment.NewLine;
@@ -200,7 +200,7 @@ namespace ALLinOneRename
             }
             else
             {
-                SetCursorDown();
+                SetCursorDown(RtbRenamedText);
 
                 RtbRenamedText.SelectionColor = Color.Red;
                 RtbRenamedText.SelectedText += "PATH DOES NOT EXIST" + Environment.NewLine;
@@ -277,7 +277,7 @@ namespace ALLinOneRename
 
                                 File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
 
-                                SetCursorDown();
+                                SetCursorDown(RtbRenamedText);
 
                                 RtbRenamedText.SelectionColor = Color.Blue;
                                 RtbRenamedText.SelectedText += fileInfo.Name + " --> " + finalName + Environment.NewLine;
@@ -294,7 +294,7 @@ namespace ALLinOneRename
 
                                 File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
 
-                                SetCursorDown();
+                                SetCursorDown(RtbRenamedText);
 
                                 RtbRenamedText.SelectionColor = Color.Blue;
                                 RtbRenamedText.SelectedText += fileInfo.Name + " --> " + finalName + Environment.NewLine;
@@ -305,7 +305,7 @@ namespace ALLinOneRename
                         {
                             renameSuccess = false;
 
-                            SetCursorDown();
+                            SetCursorDown(RtbRenamedText);
 
                             RtbRenamedText.SelectionColor = Color.Red;
                             RtbRenamedText.SelectedText = fileInfo.Name + " Already exist" + Environment.NewLine;
@@ -315,7 +315,7 @@ namespace ALLinOneRename
                     }
                     else
                     {
-                        SetCursorDown();
+                        SetCursorDown(RtbRenamedText);
 
                         RtbRenamedText.SelectionColor = Color.Red;
                         RtbRenamedText.SelectedText = fileInfo.Name + "Is being used";
@@ -323,7 +323,7 @@ namespace ALLinOneRename
                 }
                 if (renameSuccess)
                 {
-                    SetCursorDown();
+                    SetCursorDown(RtbRenamedText);
 
                     RtbRenamedText.SelectionColor = Color.Green;
                     RtbRenamedText.SelectedText = "Done Successfully" + Environment.NewLine;
@@ -451,7 +451,7 @@ namespace ALLinOneRename
             }
             else
             {
-                SetCursorDown();
+                SetCursorDown(RtbRenamedText);
 
                 RtbRenamedText.SelectionColor = Color.Red;
                 RtbRenamedText.SelectedText += "PATH DOES NOT EXIST" + Environment.NewLine;
@@ -520,7 +520,7 @@ namespace ALLinOneRename
             }
             else
             {
-                SetCursorDown();
+                SetCursorDown(RtbRenamedText);
 
                 RtbRenamedText.SelectionColor = Color.Red;
                 RtbRenamedText.SelectedText += "PATH DOES NOT EXIST" + Environment.NewLine;
@@ -550,17 +550,16 @@ namespace ALLinOneRename
             return false;
         }
 
-        private void SetCursorDown()
+        private void SetCursorDown(RichTextBox Rtb)
         {
-            RtbRenamedText.SelectionStart = RtbRenamedText.Text.Length;
-            RtbRenamedText.Focus();
+            Rtb.SelectionStart = Rtb.Text.Length;
+            Rtb.Focus();
+            
         }
 
         private void BtnCheckFiles_Click(object sender, EventArgs e)
         {
-            CheckFiles checkFiles = new CheckFiles();
-            checkFiles.Show();
-
+            RtbCheckFiles.Clear();
             //will check 2 directories and their suddirectories
 
             bool needFilter = false;//must for the GetNumberOutOfString
@@ -587,18 +586,17 @@ namespace ALLinOneRename
 
             if (WasThereAnyInvalid)
             {
-                checkFiles.AppendTextToRtb("\n\nProblem\n", Color.Red);
-                checkFiles.AppendTextToRtb(InvalidSeasonName, Color.Red);
+                AppendColoredTextToRtb("\n\nProblem\n", Color.Red);
+                AppendColoredTextToRtb(InvalidSeasonName, Color.Red);
             }
             else
             {
-                checkFiles.AppendTextToRtb("\n\nEverything is ok", Color.Green);
+                AppendColoredTextToRtb("\n\nEverything is ok", Color.Green);
             }
 
             void LoadSubDirs(string dir)
             {
-
-                checkFiles.AppendTextToRtb(dir, Color.Black);
+                AppendColoredTextToRtb(dir, Color.Black);
 
                 bool IsfirstTime = true;
 
@@ -624,7 +622,7 @@ namespace ALLinOneRename
 
                         if (!IsVaild(Path.GetFileNameWithoutExtension(fileInfo.FullName), fileInfo.Name, fileInfo.Extension, season, seriesName))
                         {
-                            checkFiles.AppendTextToRtb("Found a problem at:" 
+                            AppendColoredTextToRtb("Found a problem at:" 
                                                         + fileInfo.DirectoryName 
                                                         + "problem name: " 
                                                         + fileInfo.Name
@@ -637,8 +635,8 @@ namespace ALLinOneRename
                             }
                         }
                     }
-                    if (thisTrySucess)
-                        checkFiles.AppendTextToRtb("Passed", Color.Green);
+                    if (thisTrySucess) 
+                        AppendColoredTextToRtb("Passed", Color.Green);
                 }
                 if (subdirectoryEntries.Length < 1)
                     goto END;
@@ -795,6 +793,14 @@ namespace ALLinOneRename
                 //converted + num = num that means that the season or resolution filter worked but was not necessery
 
                 return converted;
+            }
+
+            void AppendColoredTextToRtb(string text, Color _color)
+            {
+                RtbCheckFiles.SelectionColor = _color;
+                RtbCheckFiles.SelectedText += text + Environment.NewLine;
+                RtbCheckFiles.ScrollToCaret();
+                SetCursorDown(RtbCheckFiles);
             }
         }
     }

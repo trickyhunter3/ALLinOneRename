@@ -47,6 +47,7 @@ namespace ALLinOneRename
             this.label6 = new System.Windows.Forms.Label();
             this.TbxSubtractNumber = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.RtbCheckFiles = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -210,11 +211,22 @@ namespace ALLinOneRename
             this.label7.TabIndex = 17;
             this.label7.Text = "the file names MUST be just numbers\r\nbefore using this button\r\n";
             // 
+            // RtbCheckFiles
+            // 
+            this.RtbCheckFiles.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.RtbCheckFiles.Location = new System.Drawing.Point(725, 12);
+            this.RtbCheckFiles.Name = "RtbCheckFiles";
+            this.RtbCheckFiles.ReadOnly = true;
+            this.RtbCheckFiles.Size = new System.Drawing.Size(457, 426);
+            this.RtbCheckFiles.TabIndex = 18;
+            this.RtbCheckFiles.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1194, 450);
+            this.Controls.Add(this.RtbCheckFiles);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.TbxSubtractNumber);
             this.Controls.Add(this.label6);
@@ -260,6 +272,7 @@ namespace ALLinOneRename
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox TbxSubtractNumber;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.RichTextBox RtbCheckFiles;
     }
 }
 
