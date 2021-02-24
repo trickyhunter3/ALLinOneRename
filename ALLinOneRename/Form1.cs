@@ -263,13 +263,13 @@ namespace ALLinOneRename
                             if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
                                 goto END;               //filter file names
 
-                            string seriesName = fileInfo.Directory.Parent.Name;//the Series name of the current file
                             string seasonNum;                                  //Season number of the current file
 
                             string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
 
                             if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season 
                             {
+                                string seriesName = fileInfo.Directory.Parent.Name;//the Series name of the current file
                                 int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide);
                                 seasonNum = seasonAndNumberSplited[1];
 
@@ -286,13 +286,24 @@ namespace ALLinOneRename
 
                             else //if directory name was not season
                             {
+                                string seriesName = fileInfo.Directory.Name;//the Series name of the current file
                                 int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide);
 
                                 seasonNum = "1"; //set SeasonNum to 1
 
                                 string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
 
-                                File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
+                                string newPath = fileInfo.DirectoryName + '\\' + "Season " + seasonNum + '\\';
+
+                                if (!Directory.Exists(newPath))
+                                {
+                                    SetCursorDown(RtbRenamedText);
+
+                                    RtbRenamedText.Text += "Created Folder: Season " + seasonNum + Environment.NewLine;
+                                    Directory.CreateDirectory(newPath);
+                                }
+
+                                File.Move(fileInfo.FullName, newPath + finalName + fileInfo.Extension);
 
                                 SetCursorDown(RtbRenamedText);
 
