@@ -629,13 +629,18 @@ namespace ALLinOneRename
                         string seriesName = fileInfo.Directory.Parent.Name + " - ";
                         string inFileSeriesName = fileInfo.Name.Split(' ')[0] + " - ";
 
-                        string season = fileInfo.Directory.Name.Split(' ')[1];
+                        string[] seasonArray = fileInfo.Directory.Name.Split(' ');
+                        string season;
+                        if (seasonArray.Length > 1)
+                            season = seasonArray[1];
+                        else
+                            season = "dwadaww";//random - should be incorrect
 
                         if (!IsVaild(Path.GetFileNameWithoutExtension(fileInfo.FullName), fileInfo.Name, fileInfo.Extension, season, seriesName))
                         {
-                            AppendColoredTextToRtb("Found a problem at:" 
-                                                        + fileInfo.DirectoryName 
-                                                        + "problem name: " 
+                            AppendColoredTextToRtb("Found a problem at:"
+                                                        + fileInfo.DirectoryName
+                                                        + "problem name: "
                                                         + fileInfo.Name
                                                         , Color.Red);
                             WasThereAnyInvalid = true;
@@ -665,8 +670,13 @@ namespace ALLinOneRename
 
                 int num = GetNumberOutOfString(name, type, "");
 
-                //check if name format is correct like this --> SeriesName - S SeasonNumber E EpisodeNumber ---> example: SeriesName - S01E01
+                //check if Season is a number
+                int i;
+                bool bNum = int.TryParse(Season, out i);
+                if (!bNum)
+                    return false;
 
+                //check if name format is correct like this --> SeriesName - S SeasonNumber E EpisodeNumber ---> example: SeriesName - S01E01
                 if (Convert.ToInt32(Season) / 10 == 0)
                 {
                     //episode is less then 10 -> there is a need for "0 helper"
