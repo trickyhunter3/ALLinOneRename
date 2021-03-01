@@ -539,35 +539,6 @@ namespace ALLinOneRename
             }
         }
 
-        protected virtual bool IsFileLocked(FileInfo file)
-        {
-            try
-            {
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-                return true;
-            }
-
-            //file is not locked
-            return false;
-        }
-
-        private void SetCursorDown(RichTextBox Rtb)
-        {
-            Rtb.SelectionStart = Rtb.Text.Length;
-            Rtb.Focus();
-            
-        }
-
         private void BtnCheckFiles_Click(object sender, EventArgs e)
         {
             RtbCheckFiles.Clear();
@@ -671,8 +642,7 @@ namespace ALLinOneRename
                 int num = GetNumberOutOfString(name, type, "");
 
                 //check if Season is a number
-                int i;
-                bool bNum = int.TryParse(Season, out i);
+                bool bNum = int.TryParse(Season, out int i);
                 if (!bNum)
                     return false;
 
@@ -823,6 +793,45 @@ namespace ALLinOneRename
                 RtbCheckFiles.ScrollToCaret();
                 SetCursorDown(RtbCheckFiles);
             }
+        }
+
+        private void BtnClearRenamedRtb_Click(object sender, EventArgs e)
+        {
+            RtbRenamedText.Clear();
+        }
+
+        private void BtnClearCheckFilesRtb_Click(object sender, EventArgs e)
+        {
+            RtbCheckFiles.Clear();
+        }
+
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
+        }
+
+        private void SetCursorDown(RichTextBox Rtb)
+        {
+            Rtb.SelectionStart = Rtb.Text.Length;
+            Rtb.Focus();
+
         }
     }
 

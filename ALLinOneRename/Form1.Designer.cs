@@ -48,6 +48,8 @@ namespace ALLinOneRename
             this.TbxSubtractNumber = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.RtbCheckFiles = new System.Windows.Forms.RichTextBox();
+            this.BtnClearRenamedRtb = new System.Windows.Forms.Button();
+            this.BtnClearCheckFilesRtb = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -221,11 +223,33 @@ namespace ALLinOneRename
             this.RtbCheckFiles.TabIndex = 18;
             this.RtbCheckFiles.Text = "";
             // 
+            // BtnClearRenamedRtb
+            // 
+            this.BtnClearRenamedRtb.Location = new System.Drawing.Point(52, 41);
+            this.BtnClearRenamedRtb.Name = "BtnClearRenamedRtb";
+            this.BtnClearRenamedRtb.Size = new System.Drawing.Size(75, 23);
+            this.BtnClearRenamedRtb.TabIndex = 19;
+            this.BtnClearRenamedRtb.Text = "Clear Text";
+            this.BtnClearRenamedRtb.UseVisualStyleBackColor = true;
+            this.BtnClearRenamedRtb.Click += new System.EventHandler(this.BtnClearRenamedRtb_Click);
+            // 
+            // BtnClearCheckFilesRtb
+            // 
+            this.BtnClearCheckFilesRtb.Location = new System.Drawing.Point(585, 41);
+            this.BtnClearCheckFilesRtb.Name = "BtnClearCheckFilesRtb";
+            this.BtnClearCheckFilesRtb.Size = new System.Drawing.Size(75, 23);
+            this.BtnClearCheckFilesRtb.TabIndex = 20;
+            this.BtnClearCheckFilesRtb.Text = "Clear Text";
+            this.BtnClearCheckFilesRtb.UseVisualStyleBackColor = true;
+            this.BtnClearCheckFilesRtb.Click += new System.EventHandler(this.BtnClearCheckFilesRtb_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1194, 450);
+            this.Controls.Add(this.BtnClearCheckFilesRtb);
+            this.Controls.Add(this.BtnClearRenamedRtb);
             this.Controls.Add(this.RtbCheckFiles);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.TbxSubtractNumber);
@@ -273,6 +297,8 @@ namespace ALLinOneRename
         private System.Windows.Forms.TextBox TbxSubtractNumber;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.RichTextBox RtbCheckFiles;
+        private System.Windows.Forms.Button BtnClearRenamedRtb;
+        private System.Windows.Forms.Button BtnClearCheckFilesRtb;
     }
 }
 
