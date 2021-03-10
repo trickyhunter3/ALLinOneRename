@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -51,14 +45,11 @@ namespace ALLinOneRename
 
                 bool isNumberFirst = CbxIsNumberFirstV1.Checked;
                 string numberSide;
+
                 if (isNumberFirst)
-                {
                     numberSide = "f";//number is first
-                }
                 else
-                {
                     numberSide = ""; //not first
-                }
 
                 DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
                 FileInfo[] infos = directoryInfo.GetFiles();
@@ -72,139 +63,30 @@ namespace ALLinOneRename
                         if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
                             goto END;   //filter file names
 
-                        int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide);
+                        int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide, needFilter, numFilter);
 
                         File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
 
-                        RtbRenamedText.Focus();
-
-                        RtbRenamedText.SelectionColor = Color.Blue;
-                        RtbRenamedText.SelectedText += fileInfo.Name + "--> " + numberFromTheString.ToString() + Environment.NewLine;
-                        RtbRenamedText.ScrollToCaret();
+                        SetCursorDown();
+                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + "--> " + numberFromTheString.ToString() + Environment.NewLine, Color.Blue);
                     }
                     catch (IOException)
                     {
                         renameSuccess = false;
-
-                        RtbRenamedText.Focus();
-
-                        RtbRenamedText.SelectionColor = Color.Red;
-                        RtbRenamedText.SelectedText = fileInfo.Name + " Already exist" + Environment.NewLine;
-                        RtbRenamedText.ScrollToCaret();
+                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", Color.Red);
                     }
                 END:;
                 }
                 if (renameSuccess)
                 {
-                    RtbRenamedText.Focus();
-
-                    RtbRenamedText.SelectionColor = Color.Green;
-                    RtbRenamedText.SelectedText = "Done Successfully" + Environment.NewLine;
-                }
-
-                int GetNumberOutOfString(string File_name, string file_type, string Side)
-                {
-                    // j is current index of the file_name 
-                    int converted = 0;
-                    //if we find a number that is episode then i++ happen so we save the episode number and 
-                    //on the next run when it find a season number or resoulution number it will go to 0 on the next int not on the
-                    //episode number itself
-                    int numbers_together = 0;
-                    //when he find number he start to count so that it won't check if statment IF he is not at least 1 number
-                    int number_holder = -1;
-                    //hold a number if it's the only number then 
-                    string numbers = null;
-                    for (int j = 0; j < File_name.Length; j++)
-                    {
-                        switch (File_name[j])
-                        {
-                            case '0':
-                            case '1':
-                            case '2':
-                            case '3':
-                            case '4':
-                            case '5':
-                            case '6':
-                            case '7':
-                            case '8':
-                            case '9':
-                                numbers_together++;
-                                numbers += File_name[j];//start recording the numbers if they are found
-                                break;
-                            default:
-                                if (numbers_together != 0)
-                                {
-                                    if (Side == "f")
-                                        return Convert.ToInt32(numbers);
-                                    if (numbers + file_type == File_name)
-                                    {
-                                        converted = Convert.ToInt32(numbers);
-                                        number_holder = 0;
-                                        goto END;           //if file is just a number then returns that number
-                                    }
-                                    if (numbers == "0")
-                                        number_holder = 0;
-                                    if (needFilter)
-                                    {
-                                        for (int i = 0; i < numFilter.Length; i++)
-                                        {
-                                            if (numFilter[i] == Convert.ToInt32(numbers))
-                                            {
-                                                if (number_holder == 0)
-                                                {
-                                                    goto END;
-                                                }
-                                                number_holder = Convert.ToInt32(numbers);
-                                                goto END;
-                                            }
-                                        }
-                                    }
-                                    switch (numbers)
-                                    {
-                                        case "1":
-                                        case "2":
-                                        case "3":
-                                        case "4":
-                                        case "5":
-                                        case "6":
-                                        case "7":
-                                        case "8":
-                                        case "9":
-                                        case "640":
-                                        case "720":
-                                        case "1080":
-                                        case "1920":
-                                        case "2160":
-                                        case "2010":
-                                            if (number_holder == 0)
-                                            {
-                                                goto END;
-                                            }
-                                            number_holder = Convert.ToInt32(numbers);
-                                            goto END;
-                                    }
-                                    converted = Convert.ToInt32(numbers);
-                                END:;
-                                    numbers = null;
-                                }
-                                numbers_together = 0;
-                                break;
-                        }
-                    }
-                    if (converted + number_holder == number_holder)
-                        return number_holder;
-                    //converted + num = num that means that the season or resolution filter worked but was not necessery
-
-                    return converted;
+                    SetCursorDown();
+                    AppendColoredTextToRtb(RtbRenamedText, "Done Successfully\n", Color.Green);
                 }
             }
             else
             {
-                RtbRenamedText.Focus();
-
-                RtbRenamedText.SelectionColor = Color.Red;
-                RtbRenamedText.SelectedText += "PATH DOES NOT EXIST" + Environment.NewLine;
-                RtbRenamedText.ScrollToCaret();
+                SetCursorDown();
+                AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", Color.Red);
             }
         }
 
@@ -267,28 +149,23 @@ namespace ALLinOneRename
 
                             string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
 
+                            string seriesName = fileInfo.Directory.Parent.Name;//the Series name of the current file
+                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide, needFilter, numFilter);
+
                             if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season 
                             {
-                                string seriesName = fileInfo.Directory.Parent.Name;//the Series name of the current file
-                                int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide);
                                 seasonNum = seasonAndNumberSplited[1];
 
                                 string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
 
                                 File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
 
-                                RtbRenamedText.Focus();
-
-                                RtbRenamedText.SelectionColor = Color.Blue;
-                                RtbRenamedText.SelectedText += fileInfo.Name + " --> " + finalName + Environment.NewLine;
-                                RtbRenamedText.ScrollToCaret();
+                                SetCursorDown();
+                                AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
                             }
 
                             else //if directory name was not season
                             {
-                                string seriesName = fileInfo.Directory.Name;//the Series name of the current file
-                                int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide);
-
                                 seasonNum = "1"; //set SeasonNum to 1
 
                                 string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
@@ -305,39 +182,28 @@ namespace ALLinOneRename
 
                                 File.Move(fileInfo.FullName, newPath + finalName + fileInfo.Extension);
 
-                                RtbRenamedText.Focus();
-
-                                RtbRenamedText.SelectionColor = Color.Blue;
-                                RtbRenamedText.SelectedText += fileInfo.Name + " --> " + finalName + Environment.NewLine;
-                                RtbRenamedText.ScrollToCaret();
+                                SetCursorDown();
+                                AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
                             }
                         }
                         catch (IOException)
                         {
                             renameSuccess = false;
-
-                            RtbRenamedText.Focus();
-
-                            RtbRenamedText.SelectionColor = Color.Red;
-                            RtbRenamedText.SelectedText = fileInfo.Name + " Already exist" + Environment.NewLine;
-                            RtbRenamedText.ScrollToCaret();
+                            AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", Color.Red);
                         }
                     END:;
                     }
                     else
                     {
-                        RtbRenamedText.Focus();
-
-                        RtbRenamedText.SelectionColor = Color.Red;
-                        RtbRenamedText.SelectedText = fileInfo.Name + "Is being used";
+                        renameSuccess = false;
+                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + "Is being used\n", Color.Red);
                     }
                 }
+
                 if (renameSuccess)
                 {
-                    RtbRenamedText.Focus();
-
-                    RtbRenamedText.SelectionColor = Color.Green;
-                    RtbRenamedText.SelectedText = "Done Successfully" + Environment.NewLine;
+                    SetCursorDown();
+                    AppendColoredTextToRtb(RtbRenamedText, "Done Successfully\n", Color.Green);
                 }
 
                 string CreateFinalName(int numberFromTheString, string seasonNum, string seriesName)
@@ -362,180 +228,89 @@ namespace ALLinOneRename
                     else
                         return "S" + seasonNum + episodeHelper + numberFromTheString.ToString();
                 }
-
-                int GetNumberOutOfString(string File_name, string file_type, string Side)
-                {
-                    // j is current index of the file_name 
-                    int converted = 0;
-                    //if we find a number that is episode then i++ happen so we save the episode number and 
-                    //on the next run when it find a season number or resoulution number it will go to 0 on the next int not on the
-                    //episode number itself
-                    int numbers_together = 0;
-                    //when he find number he start to count so that it won't check if statment IF he is not at least 1 number
-                    int number_holder = -1;
-                    //hold a number if it's the only number then 
-                    string numbers = null;
-                    for (int j = 0; j < File_name.Length; j++)
-                    {
-                        switch (File_name[j])
-                        {
-                            case '0':
-                            case '1':
-                            case '2':
-                            case '3':
-                            case '4':
-                            case '5':
-                            case '6':
-                            case '7':
-                            case '8':
-                            case '9':
-                                numbers_together++;
-                                numbers += File_name[j];//start recording the numbers if they are found
-                                break;
-                            default:
-                                if (numbers_together != 0)
-                                {
-                                    if (Side == "f")
-                                        return Convert.ToInt32(numbers);
-                                    if (numbers + file_type == File_name)
-                                    {
-                                        converted = Convert.ToInt32(numbers);
-                                        number_holder = 0;
-                                        goto END;           //if file is just a number then returns that number
-                                    }
-                                    if (numbers == "0")
-                                        number_holder = 0;
-                                    if (needFilter)
-                                    {
-                                        for (int i = 0; i < numFilter.Length; i++)
-                                        {
-                                            if (numFilter[i] == Convert.ToInt32(numbers))
-                                            {
-                                                if (number_holder == 0)
-                                                {
-                                                    goto END;
-                                                }
-                                                number_holder = Convert.ToInt32(numbers);
-                                                goto END;
-                                            }
-                                        }
-                                    }
-                                    switch (numbers)
-                                    {
-                                        case "1":
-                                        case "2":
-                                        case "3":
-                                        case "4":
-                                        case "5":
-                                        case "6":
-                                        case "7":
-                                        case "8":
-                                        case "9":
-                                        case "640":
-                                        case "720":
-                                        case "1080":
-                                        case "1920":
-                                        case "2160":
-                                        case "2010":
-                                            if (number_holder == 0)
-                                            {
-                                                goto END;
-                                            }
-                                            number_holder = Convert.ToInt32(numbers);
-                                            goto END;
-                                    }
-                                    converted = Convert.ToInt32(numbers);
-                                END:;
-                                    numbers = null;
-                                }
-                                numbers_together = 0;
-                                break;
-                        }
-                    }
-                    if (converted + number_holder == number_holder)
-                        return number_holder;
-                    //converted + num = num that means that the season or resolution filter worked but was not necessery
-
-                    return converted;
-                }
-
             }
             else
             {
-                RtbRenamedText.Focus();
-
-                RtbRenamedText.SelectionColor = Color.Red;
-                RtbRenamedText.SelectedText += "PATH DOES NOT EXIST" + Environment.NewLine;
-                RtbRenamedText.ScrollToCaret();
+                SetCursorDown();
+                AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", Color.Red);
             }
         }
 
-        private void BtnSubtractName_Click(object sender, EventArgs e)
+        private void BtnSubtractName_Click(object sender, EventArgs e)//only works if the numbers are -  1,2,3,4...
         {
             if (Directory.Exists(TbxPath.Text))
             {
-                string usersPath = TbxPath.Text;
-                if (usersPath[usersPath.Length - 1] != '\\')
-                    usersPath += '\\';
-
-                //get the directory info files and check if there is a path
-                DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
-                FileInfo[] infos = directoryInfo.GetFiles();
-
-                int subtractAmount = Convert.ToInt32(TbxSubtractNumber.Text);
-                int subtracted;
-
-                string converted;
-
-                if(infos.Length < Math.Abs(subtractAmount))
+                var isNumeric = int.TryParse(TbxSubtractNumber.Text, out _);
+                if (TbxSubtractNumber.Text != "" && isNumeric)
                 {
-                    foreach(FileInfo fileInfo in infos)
+                    string usersPath = TbxPath.Text;
+                    if (usersPath[usersPath.Length - 1] != '\\')
+                        usersPath += '\\';
+
+                    //get the directory info files and check if there is a path
+                    DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
+                    FileInfo[] infos = directoryInfo.GetFiles();
+
+                    int subtractAmount = Convert.ToInt32(TbxSubtractNumber.Text);
+                    int subtracted;
+
+                    string converted;
+
+                    if (infos.Length < Math.Abs(subtractAmount))
                     {
-                        converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                        foreach (FileInfo fileInfo in infos)
+                        {
+                            string originalFileName = fileInfo.Name;
 
-                        subtracted = Convert.ToInt32(converted) - subtractAmount;
+                            converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
 
-                        File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+                            subtracted = Convert.ToInt32(converted) - subtractAmount;
 
-                        RtbRenamedText.SelectionColor = Color.Blue;
-                        RtbRenamedText.SelectedText += fileInfo.Name + " --> " + subtracted.ToString() + Environment.NewLine;
-                        RtbRenamedText.ScrollToCaret();
+                            File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+
+                            SetCursorDown();
+                            AppendColoredTextToRtb(RtbRenamedText, originalFileName + " --> " + subtracted.ToString() + Environment.NewLine, Color.Blue);
+                        }
+                    }
+                    else
+                    {
+                        foreach (FileInfo fileInfo in infos)
+                        {
+                            converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+
+                            subtracted = Convert.ToInt32(converted) + infos.Length; //add 
+
+                            File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+                        }
+
+                        infos = directoryInfo.GetFiles();//get the new files
+
+                        foreach (FileInfo fileInfo in infos)
+                        {
+
+                            converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+
+                            string originalFileName = (Convert.ToInt32(converted) - infos.Length).ToString() ; 
+
+                            subtracted = Convert.ToInt32(converted) - infos.Length - subtractAmount;//then subtract all 
+
+                            File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+
+                            SetCursorDown();
+                            AppendColoredTextToRtb(RtbRenamedText, originalFileName + " --> " + subtracted.ToString() + Environment.NewLine, Color.Blue);
+                        }
                     }
                 }
                 else
                 {
-                    foreach (FileInfo fileInfo in infos)
-                    {
-                        converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
-
-                        subtracted = Convert.ToInt32(converted) + infos.Length; //add 
-
-                        File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
-                    }
-
-                    infos = directoryInfo.GetFiles();//get the new files
-
-                    foreach (FileInfo fileInfo in infos)
-                    {
-                        converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
-
-                        subtracted = Convert.ToInt32(converted) - infos.Length - subtractAmount;//then subtract all 
-
-                        File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
-
-                        RtbRenamedText.SelectionColor = Color.Blue;
-                        RtbRenamedText.SelectedText += fileInfo.Name + " --> " + subtracted.ToString() + Environment.NewLine;
-                        RtbRenamedText.ScrollToCaret();
-                    }
+                    SetCursorDown();
+                    AppendColoredTextToRtb(RtbRenamedText, "No \"Subtract\" number detected\n", Color.Red);
                 }
             }
             else
             {
-                RtbRenamedText.Focus();
-
-                RtbRenamedText.SelectionColor = Color.Red;
-                RtbRenamedText.SelectedText += "PATH DOES NOT EXIST" + Environment.NewLine;
-                RtbRenamedText.ScrollToCaret();
+                SetCursorDown();
+                AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", Color.Red);
             }
         }
 
@@ -567,14 +342,9 @@ namespace ALLinOneRename
                 LoadSubDirs(subdirectory);
 
             if (WasThereAnyInvalid)
-            {
-                AppendColoredTextToRtb("\nProblem\n", Color.Red);
-                AppendColoredTextToRtb(InvalidSeasonName, Color.Red);
-            }
+                AppendColoredTextToRtb(RtbCheckFiles, "\nProblem\n" + InvalidSeasonName + Environment.NewLine, Color.Red);
             else
-            {
-                AppendColoredTextToRtb("\nEverything is ok", Color.Green);
-            }
+                AppendColoredTextToRtb(RtbCheckFiles, "\nEverything is ok\n", Color.Green);
 
             void LoadSubDirs(string dir)
             {
@@ -609,11 +379,7 @@ namespace ALLinOneRename
 
                         if (!IsVaild(Path.GetFileNameWithoutExtension(fileInfo.FullName), fileInfo.Name, fileInfo.Extension, season, seriesName))
                         {
-                            AppendColoredTextToRtb("Found a problem at:"
-                                                        + fileInfo.DirectoryName
-                                                        + "problem name: "
-                                                        + fileInfo.Name
-                                                        , Color.Red);
+                            AppendColoredTextToRtb(RtbCheckFiles, "Found a problem at:" + fileInfo.DirectoryName + "problem name: " + fileInfo.Name + Environment.NewLine, Color.Red);
                             WasThereAnyInvalid = true;
                             if (IsfirstTime)
                             {
@@ -623,11 +389,11 @@ namespace ALLinOneRename
                         }
                     }
                     if (thisTrySucess) 
-                        AppendColoredTextToRtb("Passed", Color.Green);
+                        AppendColoredTextToRtb(RtbCheckFiles, "Passed\n", Color.Green);
                 }
                 if (subdirectoryEntries.Length < 1)
                     goto END;
-                // doesn't enter the "Plex Versions" folder
+                // don't enter the "Plex Versions" folder
                 if (dir + '\\' + "Plex Versions" != subdirectoryEntries[0])
                     foreach (string subdirectory in subdirectoryEntries)
                         LoadSubDirs(subdirectory);
@@ -639,7 +405,7 @@ namespace ALLinOneRename
                 if (name == "desktop.ini" || name == "icon.ico")
                     return true;
 
-                int num = GetNumberOutOfString(name, type, "");
+                int num = GetNumberOutOfString(name, type, "", needFilter, numFilter);
 
                 //check if Season is a number
                 bool bNum = int.TryParse(Season, out int i);
@@ -689,111 +455,6 @@ namespace ALLinOneRename
 
                 return false;
             }
-
-            int GetNumberOutOfString(string File_name, string file_type, string Side)
-            {
-                // j is current index of the file_name 
-                int converted = 0;
-                //if we find a number that is episode then i++ happen so we save the episode number and 
-                //on the next run when it find a season number or resoulution number it will go to 0 on the next int not on the
-                //episode number itself
-                int numbers_together = 0;
-                //when he find number he start to count so that it won't check if statment IF he is not at least 1 number
-                int number_holder = -1;
-                //hold a number if it's the only number then 
-                string numbers = null;
-                for (int j = 0; j < File_name.Length; j++)
-                {
-                    switch (File_name[j])
-                    {
-                        case '0':
-                        case '1':
-                        case '2':
-                        case '3':
-                        case '4':
-                        case '5':
-                        case '6':
-                        case '7':
-                        case '8':
-                        case '9':
-                            numbers_together++;
-                            numbers += File_name[j];//start recording the numbers if they are found
-                            break;
-                        default:
-                            if (numbers_together != 0)
-                            {
-                                if (Side == "f")
-                                    return Convert.ToInt32(numbers);
-                                if (numbers + file_type == File_name)
-                                {
-                                    converted = Convert.ToInt32(numbers);
-                                    number_holder = 0;
-                                    goto END;           //if file is just a number then returns that number
-                                }
-                                if (numbers == "0")
-                                    number_holder = 0;
-                                if (needFilter)
-                                {
-                                    for (int i = 0; i < numFilter.Length; i++)
-                                    {
-                                        if (numFilter[i] == Convert.ToInt32(numbers))
-                                        {
-                                            if (number_holder == 0)
-                                            {
-                                                goto END;
-                                            }
-                                            number_holder = Convert.ToInt32(numbers);
-                                            goto END;
-                                        }
-                                    }
-                                }
-                                switch (numbers)
-                                {
-                                    case "1":
-                                    case "2":
-                                    case "3":
-                                    case "4":
-                                    case "5":
-                                    case "6":
-                                    case "7":
-                                    case "8":
-                                    case "9":
-                                    case "640":
-                                    case "720":
-                                    case "1080":
-                                    case "1920":
-                                    case "2160":
-                                    case "2010":
-                                        if (number_holder == 0)
-                                        {
-                                            goto END;
-                                        }
-                                        number_holder = Convert.ToInt32(numbers);
-                                        goto END;
-                                }
-                                converted = Convert.ToInt32(numbers);
-                            END:;
-                                numbers = null;
-                            }
-                            numbers_together = 0;
-                            break;
-                    }
-                }
-                if (converted + number_holder == number_holder)
-                    return number_holder;
-                //converted + num = num that means that the season or resolution filter worked but was not necessery
-
-                return converted;
-            }
-
-            void AppendColoredTextToRtb(string text, Color _color)
-            {
-                RtbCheckFiles.SelectionColor = _color;
-                RtbCheckFiles.SelectedText += text + Environment.NewLine;
-                ///RtbCheckFiles.ScrollToCaret();
-                //SetCursorDown(RtbCheckFiles);
-                RtbCheckFiles.Focus();
-            }
         }
 
         private void BtnClearRenamedRtb_Click(object sender, EventArgs e)
@@ -826,6 +487,114 @@ namespace ALLinOneRename
 
             //file is not locked
             return false;
+        }
+
+        private void AppendColoredTextToRtb(RichTextBox rtb, string text, Color _color)
+        {
+            rtb.Focus();
+            rtb.SelectionColor = _color;
+            rtb.SelectedText += text;
+        }
+        
+        private void SetCursorDown()
+        {
+            RtbRenamedText.Select(RtbRenamedText.Text.Length, 0);
+        }
+
+        private int GetNumberOutOfString(string File_name, string file_type, string Side, bool needFilter, int[] numFilter)
+        {
+            // j is current index of the file_name 
+            int converted = 0;
+            //if we find a number that is episode then i++ happen so we save the episode number and 
+            //on the next run when it find a season number or resoulution number it will go to 0 on the next int not on the
+            //episode number itself
+            int numbers_together = 0;
+            //when he find number he start to count so that it won't check if statment IF he is not at least 1 number
+            int number_holder = -1;
+            //hold a number if it's the only number then 
+            string numbers = null;
+            for (int j = 0; j < File_name.Length; j++)
+            {
+                switch (File_name[j])
+                {
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        numbers_together++;
+                        numbers += File_name[j];//start recording the numbers if they are found
+                        break;
+                    default:
+                        if (numbers_together != 0)
+                        {
+                            if (Side == "f")
+                                return Convert.ToInt32(numbers);
+                            if (numbers + file_type == File_name)
+                            {
+                                converted = Convert.ToInt32(numbers);
+                                number_holder = 0;
+                                goto END;           //if file is just a number then returns that number
+                            }
+                            if (numbers == "0")
+                                number_holder = 0;
+                            if (needFilter)
+                            {
+                                for (int i = 0; i < numFilter.Length; i++)
+                                {
+                                    if (numFilter[i] == Convert.ToInt32(numbers))
+                                    {
+                                        if (number_holder == 0)
+                                        {
+                                            goto END;
+                                        }
+                                        number_holder = Convert.ToInt32(numbers);
+                                        goto END;
+                                    }
+                                }
+                            }
+                            switch (numbers)
+                            {
+                                case "1":
+                                case "2":
+                                case "3":
+                                case "4":
+                                case "5":
+                                case "6":
+                                case "7":
+                                case "8":
+                                case "9":
+                                case "640":
+                                case "720":
+                                case "1080":
+                                case "1920":
+                                case "2160":
+                                case "2010":
+                                    if (number_holder == 0)
+                                    {
+                                        goto END;
+                                    }
+                                    number_holder = Convert.ToInt32(numbers);
+                                    goto END;
+                            }
+                            converted = Convert.ToInt32(numbers);
+                        END:;
+                            numbers = null;
+                        }
+                        numbers_together = 0;
+                        break;
+                }
+            }
+            if (converted + number_holder == number_holder)
+                return number_holder;
+            //converted + num = num that means that the season or resolution filter worked but was not necessery
+
+            return converted;
         }
     }
 
