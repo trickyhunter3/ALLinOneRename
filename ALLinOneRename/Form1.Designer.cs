@@ -50,6 +50,8 @@ namespace ALLinOneRename
             this.RtbCheckFiles = new System.Windows.Forms.RichTextBox();
             this.BtnClearRenamedRtb = new System.Windows.Forms.Button();
             this.BtnClearCheckFilesRtb = new System.Windows.Forms.Button();
+            this.BtnShowFolderFiles = new System.Windows.Forms.Button();
+            this.BtnOpenExplorer = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -64,7 +66,7 @@ namespace ALLinOneRename
             // 
             // BtnSubtractName
             // 
-            this.BtnSubtractName.Location = new System.Drawing.Point(52, 317);
+            this.BtnSubtractName.Location = new System.Drawing.Point(56, 386);
             this.BtnSubtractName.Name = "BtnSubtractName";
             this.BtnSubtractName.Size = new System.Drawing.Size(75, 23);
             this.BtnSubtractName.TabIndex = 1;
@@ -84,7 +86,7 @@ namespace ALLinOneRename
             // 
             // BtnCheckFiles
             // 
-            this.BtnCheckFiles.Location = new System.Drawing.Point(585, 317);
+            this.BtnCheckFiles.Location = new System.Drawing.Point(585, 415);
             this.BtnCheckFiles.Name = "BtnCheckFiles";
             this.BtnCheckFiles.Size = new System.Drawing.Size(75, 23);
             this.BtnCheckFiles.TabIndex = 3;
@@ -199,7 +201,7 @@ namespace ALLinOneRename
             // 
             // TbxSubtractNumber
             // 
-            this.TbxSubtractNumber.Location = new System.Drawing.Point(52, 346);
+            this.TbxSubtractNumber.Location = new System.Drawing.Point(47, 415);
             this.TbxSubtractNumber.Name = "TbxSubtractNumber";
             this.TbxSubtractNumber.Size = new System.Drawing.Size(100, 20);
             this.TbxSubtractNumber.TabIndex = 16;
@@ -207,7 +209,7 @@ namespace ALLinOneRename
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(1, 286);
+            this.label7.Location = new System.Drawing.Point(1, 357);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(183, 26);
             this.label7.TabIndex = 17;
@@ -243,11 +245,33 @@ namespace ALLinOneRename
             this.BtnClearCheckFilesRtb.UseVisualStyleBackColor = true;
             this.BtnClearCheckFilesRtb.Click += new System.EventHandler(this.BtnClearCheckFilesRtb_Click);
             // 
+            // BtnShowFolderFiles
+            // 
+            this.BtnShowFolderFiles.Location = new System.Drawing.Point(585, 323);
+            this.BtnShowFolderFiles.Name = "BtnShowFolderFiles";
+            this.BtnShowFolderFiles.Size = new System.Drawing.Size(75, 23);
+            this.BtnShowFolderFiles.TabIndex = 21;
+            this.BtnShowFolderFiles.Text = "Folder Files";
+            this.BtnShowFolderFiles.UseVisualStyleBackColor = true;
+            this.BtnShowFolderFiles.Click += new System.EventHandler(this.BtnShowFolderFiles_Click);
+            // 
+            // BtnOpenExplorer
+            // 
+            this.BtnOpenExplorer.Location = new System.Drawing.Point(585, 352);
+            this.BtnOpenExplorer.Name = "BtnOpenExplorer";
+            this.BtnOpenExplorer.Size = new System.Drawing.Size(75, 23);
+            this.BtnOpenExplorer.TabIndex = 22;
+            this.BtnOpenExplorer.Text = "Open Folder";
+            this.BtnOpenExplorer.UseVisualStyleBackColor = true;
+            this.BtnOpenExplorer.Click += new System.EventHandler(this.BtnOpenExplorer_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1194, 450);
+            this.Controls.Add(this.BtnOpenExplorer);
+            this.Controls.Add(this.BtnShowFolderFiles);
             this.Controls.Add(this.BtnClearCheckFilesRtb);
             this.Controls.Add(this.BtnClearRenamedRtb);
             this.Controls.Add(this.RtbCheckFiles);
@@ -299,6 +323,8 @@ namespace ALLinOneRename
         private System.Windows.Forms.RichTextBox RtbCheckFiles;
         private System.Windows.Forms.Button BtnClearRenamedRtb;
         private System.Windows.Forms.Button BtnClearCheckFilesRtb;
+        private System.Windows.Forms.Button BtnShowFolderFiles;
+        private System.Windows.Forms.Button BtnOpenExplorer;
     }
 }
 

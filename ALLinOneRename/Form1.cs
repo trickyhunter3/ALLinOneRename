@@ -467,6 +467,41 @@ namespace ALLinOneRename
             RtbCheckFiles.Clear();
         }
 
+        private void BtnShowFolderFiles_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(TbxPath.Text))
+                DirectoryInfo directoryInfo = new DirectoryInfo(TbxPath.Text);
+                FileInfo[] infos = directoryInfo.GetFiles();
+
+                foreach(FileInfo fileInfo in infos)
+                {
+                    SetCursorDown();
+                    if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")//custom icons to folders
+                        RtbRenamedText.AppendText(fileInfo.Name + " - Ignored\n");
+                    else
+                        RtbRenamedText.AppendText(fileInfo.Name + "\n");
+                }
+            }
+            else
+            {
+                SetCursorDown();
+                AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", Color.Red);
+            }
+        }
+
+        private void BtnOpenExplorer_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(TbxPath.Text))
+            {
+                System.Diagnostics.Process.Start("explorer.exe", TbxPath.Text);
+            }
+            else
+            {
+                SetCursorDown();
+                AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", Color.Red);
+            }
+        }
+
         protected virtual bool IsFileLocked(FileInfo file)
         {
             try
@@ -596,6 +631,7 @@ namespace ALLinOneRename
 
             return converted;
         }
+
     }
 
 }
