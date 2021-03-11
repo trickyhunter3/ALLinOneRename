@@ -470,6 +470,7 @@ namespace ALLinOneRename
         private void BtnShowFolderFiles_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(TbxPath.Text))
+            {
                 DirectoryInfo directoryInfo = new DirectoryInfo(TbxPath.Text);
                 FileInfo[] infos = directoryInfo.GetFiles();
 
