@@ -223,7 +223,7 @@ namespace ALLinOneRename
                 {
                     if (seasonNum == "00" || seasonNum.ToLower() == "specials")
                         return "S" + seasonNum + episodeHelper + numberFromTheString.ToString();
-                    else if (Convert.ToInt32(seasonNum) < 9)
+                    else if (Convert.ToInt32(seasonNum) <= 9)
                         return "S0" + seasonNum + episodeHelper + numberFromTheString.ToString();
                     else
                         return "S" + seasonNum + episodeHelper + numberFromTheString.ToString();
