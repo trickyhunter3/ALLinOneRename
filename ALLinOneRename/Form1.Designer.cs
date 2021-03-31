@@ -52,6 +52,8 @@ namespace ALLinOneRename
             this.BtnClearCheckFilesRtb = new System.Windows.Forms.Button();
             this.BtnShowFolderFiles = new System.Windows.Forms.Button();
             this.BtnOpenExplorer = new System.Windows.Forms.Button();
+            this.BtnTransferFilesFromDownload = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -105,6 +107,7 @@ namespace ALLinOneRename
             // 
             // RtbRenamedText
             // 
+            this.RtbRenamedText.BackColor = System.Drawing.SystemColors.ControlDark;
             this.RtbRenamedText.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RtbRenamedText.Location = new System.Drawing.Point(190, 81);
             this.RtbRenamedText.Name = "RtbRenamedText";
@@ -115,6 +118,7 @@ namespace ALLinOneRename
             // 
             // TbxPath
             // 
+            this.TbxPath.BackColor = System.Drawing.SystemColors.ControlDark;
             this.TbxPath.Location = new System.Drawing.Point(190, 41);
             this.TbxPath.Name = "TbxPath";
             this.TbxPath.Size = new System.Drawing.Size(357, 20);
@@ -122,6 +126,7 @@ namespace ALLinOneRename
             // 
             // TbxFilterNumbersV2
             // 
+            this.TbxFilterNumbersV2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.TbxFilterNumbersV2.Location = new System.Drawing.Point(585, 150);
             this.TbxFilterNumbersV2.Name = "TbxFilterNumbersV2";
             this.TbxFilterNumbersV2.Size = new System.Drawing.Size(100, 20);
@@ -166,6 +171,7 @@ namespace ALLinOneRename
             // 
             // TbxFilterNumbersV1
             // 
+            this.TbxFilterNumbersV1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.TbxFilterNumbersV1.Location = new System.Drawing.Point(52, 150);
             this.TbxFilterNumbersV1.Name = "TbxFilterNumbersV1";
             this.TbxFilterNumbersV1.Size = new System.Drawing.Size(100, 20);
@@ -201,6 +207,7 @@ namespace ALLinOneRename
             // 
             // TbxSubtractNumber
             // 
+            this.TbxSubtractNumber.BackColor = System.Drawing.SystemColors.ControlDark;
             this.TbxSubtractNumber.Location = new System.Drawing.Point(47, 415);
             this.TbxSubtractNumber.Name = "TbxSubtractNumber";
             this.TbxSubtractNumber.Size = new System.Drawing.Size(100, 20);
@@ -217,6 +224,7 @@ namespace ALLinOneRename
             // 
             // RtbCheckFiles
             // 
+            this.RtbCheckFiles.BackColor = System.Drawing.SystemColors.ControlDark;
             this.RtbCheckFiles.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RtbCheckFiles.Location = new System.Drawing.Point(725, 12);
             this.RtbCheckFiles.Name = "RtbCheckFiles";
@@ -265,11 +273,33 @@ namespace ALLinOneRename
             this.BtnOpenExplorer.UseVisualStyleBackColor = true;
             this.BtnOpenExplorer.Click += new System.EventHandler(this.BtnOpenExplorer_Click);
             // 
+            // BtnTransferFilesFromDownload
+            // 
+            this.BtnTransferFilesFromDownload.Location = new System.Drawing.Point(56, 270);
+            this.BtnTransferFilesFromDownload.Name = "BtnTransferFilesFromDownload";
+            this.BtnTransferFilesFromDownload.Size = new System.Drawing.Size(75, 23);
+            this.BtnTransferFilesFromDownload.TabIndex = 23;
+            this.BtnTransferFilesFromDownload.Text = "Transfer";
+            this.BtnTransferFilesFromDownload.UseVisualStyleBackColor = true;
+            this.BtnTransferFilesFromDownload.Click += new System.EventHandler(this.BtnTransferFilesFromDownload_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(44, 228);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(113, 39);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Idk how to tell\r\n how this button works\r\nread the source code";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1194, 450);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.BtnTransferFilesFromDownload);
             this.Controls.Add(this.BtnOpenExplorer);
             this.Controls.Add(this.BtnShowFolderFiles);
             this.Controls.Add(this.BtnClearCheckFilesRtb);
@@ -293,6 +323,7 @@ namespace ALLinOneRename
             this.Controls.Add(this.BtnRenameVTwo);
             this.Controls.Add(this.BtnSubtractName);
             this.Controls.Add(this.BtnRenameVOne);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.Text = "Renamer";
             this.ResumeLayout(false);
@@ -325,6 +356,8 @@ namespace ALLinOneRename
         private System.Windows.Forms.Button BtnClearCheckFilesRtb;
         private System.Windows.Forms.Button BtnShowFolderFiles;
         private System.Windows.Forms.Button BtnOpenExplorer;
+        private System.Windows.Forms.Button BtnTransferFilesFromDownload;
+        private System.Windows.Forms.Label label8;
     }
 }
 
