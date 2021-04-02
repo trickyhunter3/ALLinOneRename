@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using System.Linq;
 
 namespace ALLinOneRename
 {
@@ -665,36 +666,45 @@ namespace ALLinOneRename
                 DirectoryInfo directoryInfo = new DirectoryInfo(dir);
                 FileInfo[] infos = directoryInfo.GetFiles();
 
-                GetLatestSeason("Naruto Shippuden");
-
                 foreach (FileInfo fileInfo in infos)
                 {
-                    //File.Move(fileInfo.FullName, END_PATH + GetSeriesName(fileInfo.Directory.Name) + fileInfo.Name);
+                    string SeriesName = GetSeriesName(fileInfo.Directory.Name);
+                    string SeasonNum = GetLatestSeason(SeriesName);
+                    string pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
+                    File.Move(fileInfo.FullName, END_PATH + pathNeeded + fileInfo.Name);
+                    AppendColoredTextToRtb(RtbRenamedText, "Moved file: " + fileInfo.Name, Color.Blue);
                 }
-
+                Directory.Delete(dir);
                 foreach (string subdirectory in subdirectoryEntries)
                     LoadSubDirs(subdirectory);
             }
 
             string GetLatestSeason(string SeriesName)
             {
-                string result;
                 string[] currentSubdirectory = Directory.GetDirectories(END_PATH);
-
+                //find the series then the max season
                 foreach (string directory in currentSubdirectory)
                 {
                     if(@"D:\AN\Anime\" + SeriesName == directory)
                     {
+                        int j = END_PATH.Length + SeriesName.Length + 1 + 6;
                         string[] seasons = Directory.GetDirectories(directory);
+                        int[] seasonsInNum = new int[seasons.Length];
+                        for(int i = 0; i < seasons.Length; i++)
+                        {
+                            seasonsInNum[i] = Convert.ToInt32(seasons[i].Substring(END_PATH.Length + SeriesName.Length + 7));//7 is the slash and the season
+                        }
+                        int maxValue = seasonsInNum.Max();
+                        return maxValue.ToString();
                     }
                 }
-                return "";
+                return "Error";///did not find the series in folder
             }
 
-            string GetSeriesName(string directoryName, string seasonNum)
+            string GetSeriesName(string directoryName)
             {
-                string result = directoryName.Split('-')[0] + '\\';
-                result += "Season " + seasonNum;
+                string result = directoryName.Split('-')[0];
+                result = result.Substring(0, result.Length - 1); // no need the space at the end
 
                 return result;
             }
