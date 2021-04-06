@@ -123,16 +123,22 @@ namespace ALLinOneRename
                     {
                         foreach (FileInfo fileInfo in infos)
                         {
-                            string originalFileName = fileInfo.Name;
+                            if (fileInfo.Name != "desktop.ini")
+                            {
+                                if (fileInfo.Name != "icon.ico")
+                                {
+                                    string originalFileName = fileInfo.Name;
 
-                            converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                                    converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
 
-                            subtracted = Convert.ToInt32(converted) - subtractAmount;
+                                    subtracted = Convert.ToInt32(converted) - subtractAmount;
 
-                            File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+                                    File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
 
-                            SetCursorDown();
-                            AppendColoredTextToRtb(RtbRenamedText, originalFileName + " --> " + subtracted.ToString() + Environment.NewLine, Color.Blue);
+                                    SetCursorDown();
+                                    AppendColoredTextToRtb(RtbRenamedText, originalFileName + " --> " + subtracted.ToString() + Environment.NewLine, Color.Blue);
+                                }
+                            }
                         }
                     }
                     else
@@ -140,27 +146,37 @@ namespace ALLinOneRename
                         foreach (FileInfo fileInfo in infos)
                         {
                             converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                            if (converted != "desktop.ini")
+                            {
+                                if (fileInfo.Name != "icon.ico")
+                                {
+                                    subtracted = Convert.ToInt32(converted) + infos.Length; //add 
 
-                            subtracted = Convert.ToInt32(converted) + infos.Length; //add 
-
-                            File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+                                    File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+                                }
+                            }
                         }
 
                         infos = directoryInfo.GetFiles();//get the new files
 
                         foreach (FileInfo fileInfo in infos)
                         {
-
                             converted = Path.GetFileNameWithoutExtension(fileInfo.FullName);
 
-                            string originalFileName = (Convert.ToInt32(converted) - infos.Length).ToString() ; 
+                            if (converted != "desktop.ini")
+                            {
+                                if (fileInfo.Name != "icon.ico")
+                                {
+                                    string originalFileName = (Convert.ToInt32(converted) - infos.Length).ToString();
 
-                            subtracted = Convert.ToInt32(converted) - infos.Length - subtractAmount;//then subtract all 
+                                    subtracted = Convert.ToInt32(converted) - infos.Length - subtractAmount;//then subtract all 
 
-                            File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
+                                    File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
 
-                            SetCursorDown();
-                            AppendColoredTextToRtb(RtbRenamedText, originalFileName + " --> " + subtracted.ToString() + Environment.NewLine, Color.Blue);
+                                    SetCursorDown();
+                                    AppendColoredTextToRtb(RtbRenamedText, originalFileName + " --> " + subtracted.ToString() + Environment.NewLine, Color.Blue);
+                                }
+                            }
                         }
                     }
                 }
