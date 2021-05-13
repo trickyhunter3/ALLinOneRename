@@ -454,11 +454,15 @@ namespace ALLinOneRename
                     {
                         if (NameNoType == SeriesName + "S" + Season + "E0" + num)
                             return true;
+                        if (NameNoType == SeriesName + "S" + Season + "E0" + (num - 1) + "-" + "E0" + num)//more then 1 episode in a video 
+                            return true;
                     }
                     //episode is more then 10 -> there is no need for "0 helper"
                     else
                     {
                         if (NameNoType == SeriesName + "S" + Season + "E" + num)
+                            return true;
+                        if (NameNoType == SeriesName + "S" + Season + "E" + (num - 1) + "-" + "E" + num)//more then 1 episode in a video 
                             return true;
                     }
                 }
@@ -471,12 +475,15 @@ namespace ALLinOneRename
                 {
                     if (NameNoType == SeriesName + "S" + Season + EpisodeHolder + num)
                         return true;
+                    if(NameNoType == SeriesName + "S" + Season + EpisodeHolder + num + "-" + EpisodeHolder + (num + 1))//more then 1 episode in a video 
+                        return true;
                 }
                 if (NameNoType == SeriesName + "S0" + Season + EpisodeHolder + num)
                     return true;
+                if (NameNoType == SeriesName + "S0" + Season + EpisodeHolder + (num-1) + "-" + EpisodeHolder + num)//more then 1 episode in a video 
+                    return true;
 
-
-                return false;
+                    return false;
             }
         }
 
