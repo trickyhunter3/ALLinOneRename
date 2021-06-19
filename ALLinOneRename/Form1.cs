@@ -580,10 +580,10 @@ namespace ALLinOneRename
             // j is current index of the file_name 
             int converted = 0;
             //if we find a number that is episode then i++ happen so we save the episode number and 
-            //on the next run when it find a season number or resoulution number it will go to 0 on the next int not on the
+            //on the next run when it find a season number or resolution number it will go to 0 on the next int not on the
             //episode number itself
             int numbers_together = 0;
-            //when he find number he start to count so that it won't check if statment IF he is not at least 1 number
+            //when he find number he start to count so that it won't check if statement IF he is not at least 1 number
             int number_holder = -1;
             //hold a number if it's the only number then 
             string numbers = null;
