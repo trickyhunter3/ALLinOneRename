@@ -54,6 +54,7 @@ namespace ALLinOneRename
             this.BtnOpenExplorer = new System.Windows.Forms.Button();
             this.BtnTransferFilesFromDownload = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -217,11 +218,12 @@ namespace ALLinOneRename
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(1, 357);
+            this.label7.Location = new System.Drawing.Point(1, 344);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(183, 26);
+            this.label7.Size = new System.Drawing.Size(183, 39);
             this.label7.TabIndex = 17;
-            this.label7.Text = "the file names MUST be just numbers\r\nbefore using this button\r\n";
+            this.label7.Text = "the file names MUST be just numbers\r\nbefore using this button\r\n works only one li" +
+    "ne";
             // 
             // RtbCheckFiles
             // 
@@ -293,12 +295,22 @@ namespace ALLinOneRename
             this.label8.TabIndex = 24;
             this.label8.Text = "Idk how to tell\r\n how this button works\r\nread the source code";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(591, 307);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "only one line";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1194, 450);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.BtnTransferFilesFromDownload);
             this.Controls.Add(this.BtnOpenExplorer);
@@ -359,6 +371,7 @@ namespace ALLinOneRename
         private System.Windows.Forms.Button BtnOpenExplorer;
         private System.Windows.Forms.Button BtnTransferFilesFromDownload;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
     }
 }
 

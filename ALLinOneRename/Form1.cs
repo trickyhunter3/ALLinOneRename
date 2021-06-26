@@ -18,66 +18,75 @@ namespace ALLinOneRename
 
         private void BtnRenameVOne_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(TbxPath.Text))
+            string[] lines = FormatTextIntoLines(TbxPath.Text);
+            for (int ind = 0; ind < lines.Length; ind++)
             {
-                int[] numFilter;
-
-                string usersPath = TbxPath.Text;
-                if (usersPath[usersPath.Length - 1] != '\\')
-                    usersPath += '\\';
-
-                bool isNumberFirst = CbxIsNumberFirstV2.Checked;
-
-                if (TbxFilterNumbersV1.Text != "")
+                if (Directory.Exists(lines[ind]))
                 {
-                    string[] stringToNum;
+                    int[] numFilter;
 
-                    stringToNum = TbxFilterNumbersV1.Text.Split(' ');
-                    numFilter = new int[stringToNum.Length];
+                    string usersPath = lines[ind];
+                    if (usersPath[usersPath.Length - 1] != '\\')
+                        usersPath += '\\';
 
-                    for (int i = 0; i < stringToNum.Length; i++)
+                    bool isNumberFirst = CbxIsNumberFirstV2.Checked;
+
+                    if (TbxFilterNumbersV1.Text != "")
                     {
-                        if (stringToNum[i] == "")
-                            continue;
-                        numFilter[i] = Convert.ToInt32(stringToNum[i]);
+                        string[] stringToNum;
+
+                        stringToNum = TbxFilterNumbersV1.Text.Split(' ');
+                        numFilter = new int[stringToNum.Length];
+
+                        for (int i = 0; i < stringToNum.Length; i++)
+                        {
+                            if (stringToNum[i] == "")
+                                continue;
+                            numFilter[i] = Convert.ToInt32(stringToNum[i]);
+                        }
+                    }
+                    else
+                        numFilter = null;
+
+                    DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
+                    FileInfo[] infos = directoryInfo.GetFiles();
+
+                    bool renameSuccess = true;
+
+                    foreach (FileInfo fileInfo in infos)
+                    {
+                        try
+                        {
+                            if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
+                                goto END;   //filter file names
+
+                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
+
+                            File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
+
+                            SetCursorDown();
+                            AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + "--> " + numberFromTheString.ToString() + Environment.NewLine, Color.Blue);
+                        }
+                        catch (IOException)
+                        {
+                            renameSuccess = false;
+                            AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", alertColor);
+                        }
+                        END:;
+                    }
+                    if (renameSuccess)
+                    {
+                        SetCursorDown();
+                        AppendColoredTextToRtb(RtbRenamedText, "Done Successfully\n", approveColor);
                     }
                 }
                 else
-                    numFilter = null;
-
-                DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
-                FileInfo[] infos = directoryInfo.GetFiles();
-
-                bool renameSuccess = true;
-
-                foreach (FileInfo fileInfo in infos)
-                {
-                    try
-                    {
-                        if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
-                            goto END;   //filter file names
-
-                        int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
-
-                        File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
-
-                        SetCursorDown();
-                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + "--> " + numberFromTheString.ToString() + Environment.NewLine, Color.Blue);
-                    }
-                    catch (IOException)
-                    {
-                        renameSuccess = false;
-                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", alertColor);
-                    }
-                END:;
-                }
-                if (renameSuccess)
                 {
                     SetCursorDown();
-                    AppendColoredTextToRtb(RtbRenamedText, "Done Successfully\n", approveColor);
+                    AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", alertColor);
                 }
             }
-            else
+            if (lines.Length < 1)
             {
                 SetCursorDown();
                 AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", alertColor);
@@ -86,136 +95,145 @@ namespace ALLinOneRename
 
         private void BtnRenameVTwo_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(TbxPath.Text))
+            string[] lines = FormatTextIntoLines(TbxPath.Text);
+            for (int ind = 0; ind < lines.Length; ind++)
             {
-                int[] numFilter;
-
-                string usersPath = TbxPath.Text;
-                if (usersPath[usersPath.Length - 1] != '\\')
-                    usersPath += '\\';
-
-                bool isNumberFirst = CbxIsNumberFirstV2.Checked;
-                if (TbxFilterNumbersV1.Text != "")
+                if (Directory.Exists(lines[ind]))
                 {
-                    string[] stringToNum;
+                    int[] numFilter;
 
-                    stringToNum = TbxFilterNumbersV1.Text.Split(' ');
-                    numFilter = new int[stringToNum.Length];
+                    string usersPath = lines[ind];
+                    if (usersPath[usersPath.Length - 1] != '\\')
+                        usersPath += '\\';
 
-                    for (int i = 0; i < stringToNum.Length; i++)
+                    bool isNumberFirst = CbxIsNumberFirstV2.Checked;
+                    if (TbxFilterNumbersV1.Text != "")
                     {
-                        if (stringToNum[i] == "")
-                            continue;
-                        numFilter[i] = Convert.ToInt32(stringToNum[i]);
+                        string[] stringToNum;
+
+                        stringToNum = TbxFilterNumbersV1.Text.Split(' ');
+                        numFilter = new int[stringToNum.Length];
+
+                        for (int i = 0; i < stringToNum.Length; i++)
+                        {
+                            if (stringToNum[i] == "")
+                                continue;
+                            numFilter[i] = Convert.ToInt32(stringToNum[i]);
+                        }
+                    }
+                    else
+                        numFilter = null;
+
+                    //get the directory info files and check if there is a path
+                    DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
+                    FileInfo[] infos = directoryInfo.GetFiles();
+
+                    bool renameSuccess = true;
+
+                    foreach (FileInfo fileInfo in infos)
+                    {
+
+                        if (!IsFileLocked(fileInfo))
+                        {
+                            try
+                            {
+                                if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
+                                    goto END;               //filter file names
+
+                                int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
+
+                                string seasonNum;                                  //Season number of the current file
+
+                                string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
+
+                                if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season 
+                                {
+                                    string seriesName = fileInfo.Directory.Parent.Name;
+
+                                    seasonNum = seasonAndNumberSplited[1];
+
+                                    string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
+
+                                    File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
+
+                                    SetCursorDown();
+                                    AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
+                                }
+
+                                else //if directory name was not season then create a season folder
+                                {
+                                    string seriesName = fileInfo.Directory.Name;
+
+                                    seasonNum = "1"; //set SeasonNum to 1
+
+                                    string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
+
+                                    string newPath = fileInfo.DirectoryName + '\\' + "Season " + seasonNum + '\\';
+
+                                    if (!Directory.Exists(newPath))
+                                    {
+                                        RtbRenamedText.Focus();
+
+                                        RtbRenamedText.AppendText("Created Folder: Season " + seasonNum + Environment.NewLine);
+                                        Directory.CreateDirectory(newPath);
+                                    }
+
+                                    File.Move(fileInfo.FullName, newPath + finalName + fileInfo.Extension);
+
+                                    SetCursorDown();
+                                    AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
+                                }
+                            }
+                            catch (IOException)
+                            {
+                                renameSuccess = false;
+                                AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", alertColor);
+                            }
+                            END:;
+                        }
+                        else
+                        {
+                            renameSuccess = false;
+                            AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + "Is being used\n", alertColor);
+                        }
+                    }
+
+                    if (renameSuccess)
+                    {
+                        SetCursorDown();
+                        AppendColoredTextToRtb(RtbRenamedText, "Done Successfully\n", approveColor);
+                    }
+
+                    string CreateFinalName(int numberFromTheString, string seasonNum, string seriesName)
+                    {
+                        string helperName;
+                        string episodeHelper = "E";
+
+                        if (numberFromTheString / 10 < 1)
+                            episodeHelper = "E0";
+
+                        helperName = CreateHelperName(seasonNum, numberFromTheString, episodeHelper);
+
+                        return seriesName + " - " + helperName;
+                    }
+
+                    string CreateHelperName(string seasonNum, int numberFromTheString, string episodeHelper)
+                    {
+                        if (seasonNum == "00" || seasonNum.ToLower() == "specials")
+                            return "S" + seasonNum + episodeHelper + numberFromTheString.ToString();
+                        else if (Convert.ToInt32(seasonNum) <= 9)
+                            return "S0" + seasonNum + episodeHelper + numberFromTheString.ToString();
+                        else
+                            return "S" + seasonNum + episodeHelper + numberFromTheString.ToString();
                     }
                 }
                 else
-                    numFilter = null;
-
-                //get the directory info files and check if there is a path
-                DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
-                FileInfo[] infos = directoryInfo.GetFiles();
-
-                bool renameSuccess = true;
-
-                foreach (FileInfo fileInfo in infos)
-                {
-
-                    if (!IsFileLocked(fileInfo))
-                    {
-                        try
-                        {
-                            if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
-                                goto END;               //filter file names
-
-                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
-
-                            string seasonNum;                                  //Season number of the current file
-
-                            string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
-
-                            if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season 
-                            {
-                                string seriesName = fileInfo.Directory.Parent.Name;
-
-                                seasonNum = seasonAndNumberSplited[1];
-
-                                string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
-
-                                File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
-
-                                SetCursorDown();
-                                AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
-                            }
-
-                            else //if directory name was not season then create a season folder
-                            {
-                                string seriesName = fileInfo.Directory.Name;
-
-                                seasonNum = "1"; //set SeasonNum to 1
-
-                                string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
-
-                                string newPath = fileInfo.DirectoryName + '\\' + "Season " + seasonNum + '\\';
-
-                                if (!Directory.Exists(newPath))
-                                {
-                                    RtbRenamedText.Focus();
-
-                                    RtbRenamedText.AppendText("Created Folder: Season " + seasonNum + Environment.NewLine);
-                                    Directory.CreateDirectory(newPath);
-                                }
-
-                                File.Move(fileInfo.FullName, newPath + finalName + fileInfo.Extension);
-
-                                SetCursorDown();
-                                AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
-                            }
-                        }
-                        catch (IOException)
-                        {
-                            renameSuccess = false;
-                            AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", alertColor);
-                        }
-                    END:;
-                    }
-                    else
-                    {
-                        renameSuccess = false;
-                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + "Is being used\n", alertColor);
-                    }
-                }
-
-                if (renameSuccess)
                 {
                     SetCursorDown();
-                    AppendColoredTextToRtb(RtbRenamedText, "Done Successfully\n", approveColor);
-                }
-
-                string CreateFinalName(int numberFromTheString, string seasonNum, string seriesName)
-                {
-                    string helperName;
-                    string episodeHelper = "E";
-
-                    if (numberFromTheString / 10 < 1)
-                        episodeHelper = "E0";
-
-                    helperName = CreateHelperName(seasonNum, numberFromTheString, episodeHelper);
-
-                    return seriesName + " - " + helperName;
-                }
-
-                string CreateHelperName(string seasonNum, int numberFromTheString, string episodeHelper)
-                {
-                    if (seasonNum == "00" || seasonNum.ToLower() == "specials")
-                        return "S" + seasonNum + episodeHelper + numberFromTheString.ToString();
-                    else if (Convert.ToInt32(seasonNum) <= 9)
-                        return "S0" + seasonNum + episodeHelper + numberFromTheString.ToString();
-                    else
-                        return "S" + seasonNum + episodeHelper + numberFromTheString.ToString();
+                    AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", alertColor);
                 }
             }
-            else
+            if(lines.Length < 1)
             {
                 SetCursorDown();
                 AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", alertColor);
@@ -713,6 +731,11 @@ namespace ALLinOneRename
                 return result;
             }
 
+        }
+
+        private string[] FormatTextIntoLines(string text)
+        {
+            return text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 
