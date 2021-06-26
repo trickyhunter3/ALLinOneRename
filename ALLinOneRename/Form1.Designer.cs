@@ -109,10 +109,10 @@ namespace ALLinOneRename
             // 
             this.RtbRenamedText.BackColor = System.Drawing.SystemColors.ControlDark;
             this.RtbRenamedText.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.RtbRenamedText.Location = new System.Drawing.Point(190, 81);
+            this.RtbRenamedText.Location = new System.Drawing.Point(190, 134);
             this.RtbRenamedText.Name = "RtbRenamedText";
             this.RtbRenamedText.ReadOnly = true;
-            this.RtbRenamedText.Size = new System.Drawing.Size(357, 357);
+            this.RtbRenamedText.Size = new System.Drawing.Size(357, 304);
             this.RtbRenamedText.TabIndex = 5;
             this.RtbRenamedText.Text = "";
             // 
@@ -120,8 +120,9 @@ namespace ALLinOneRename
             // 
             this.TbxPath.BackColor = System.Drawing.SystemColors.ControlDark;
             this.TbxPath.Location = new System.Drawing.Point(190, 41);
+            this.TbxPath.Multiline = true;
             this.TbxPath.Name = "TbxPath";
-            this.TbxPath.Size = new System.Drawing.Size(357, 20);
+            this.TbxPath.Size = new System.Drawing.Size(357, 87);
             this.TbxPath.TabIndex = 6;
             // 
             // TbxFilterNumbersV2
@@ -155,9 +156,9 @@ namespace ALLinOneRename
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(187, 25);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.Size = new System.Drawing.Size(67, 13);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Enter Path";
+            this.label4.Text = "Enter Path/s";
             // 
             // CbxIsNumberFirstV2
             // 

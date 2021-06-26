@@ -21,39 +21,29 @@ namespace ALLinOneRename
             if (Directory.Exists(TbxPath.Text))
             {
                 int[] numFilter;
-                bool needFilter = false;
 
                 string usersPath = TbxPath.Text;
                 if (usersPath[usersPath.Length - 1] != '\\')
                     usersPath += '\\';
 
+                bool isNumberFirst = CbxIsNumberFirstV2.Checked;
+
                 if (TbxFilterNumbersV1.Text != "")
                 {
                     string[] stringToNum;
 
-                    needFilter = true;
                     stringToNum = TbxFilterNumbersV1.Text.Split(' ');
                     numFilter = new int[stringToNum.Length];
+
                     for (int i = 0; i < stringToNum.Length; i++)
                     {
                         if (stringToNum[i] == "")
                             continue;
                         numFilter[i] = Convert.ToInt32(stringToNum[i]);
                     }
-
                 }
                 else
-                {
-                    numFilter = new int[0];//compile error if not this
-                }
-
-                bool isNumberFirst = CbxIsNumberFirstV1.Checked;
-                string numberSide;
-
-                if (isNumberFirst)
-                    numberSide = "f";//number is first
-                else
-                    numberSide = ""; //not first
+                    numFilter = null;
 
                 DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
                 FileInfo[] infos = directoryInfo.GetFiles();
@@ -67,7 +57,7 @@ namespace ALLinOneRename
                         if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
                             goto END;   //filter file names
 
-                        int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide, needFilter, numFilter);
+                        int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
 
                         File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
 
@@ -99,39 +89,28 @@ namespace ALLinOneRename
             if (Directory.Exists(TbxPath.Text))
             {
                 int[] numFilter;
-                bool needFilter = false;
 
                 string usersPath = TbxPath.Text;
                 if (usersPath[usersPath.Length - 1] != '\\')
                     usersPath += '\\';
 
-                if (TbxFilterNumbersV2.Text != "")
+                bool isNumberFirst = CbxIsNumberFirstV2.Checked;
+                if (TbxFilterNumbersV1.Text != "")
                 {
                     string[] stringToNum;
 
-                    needFilter = true;
-                    stringToNum = TbxFilterNumbersV2.Text.Split(' ');
+                    stringToNum = TbxFilterNumbersV1.Text.Split(' ');
                     numFilter = new int[stringToNum.Length];
+
                     for (int i = 0; i < stringToNum.Length; i++)
                     {
                         if (stringToNum[i] == "")
                             continue;
                         numFilter[i] = Convert.ToInt32(stringToNum[i]);
                     }
-
                 }
                 else
-                {
-                    numFilter = new int[0];//compile error if not this
-                }
-
-                bool isNumberFirst = CbxIsNumberFirstV2.Checked;
-                string numberSide;
-
-                if (isNumberFirst)
-                    numberSide = "f";//number is first
-                else
-                    numberSide = null; //not first
+                    numFilter = null;
 
                 //get the directory info files and check if there is a path
                 DirectoryInfo directoryInfo = new DirectoryInfo(usersPath);
@@ -149,11 +128,11 @@ namespace ALLinOneRename
                             if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
                                 goto END;               //filter file names
 
+                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
+
                             string seasonNum;                                  //Season number of the current file
 
                             string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
-
-                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, numberSide, needFilter, numFilter);
 
                             if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season 
                             {
@@ -169,7 +148,7 @@ namespace ALLinOneRename
                                 AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
                             }
 
-                            else //if directory name was not season
+                            else //if directory name was not season then create a season folder
                             {
                                 string seriesName = fileInfo.Directory.Name;
 
@@ -340,10 +319,7 @@ namespace ALLinOneRename
         private void BtnCheckFiles_Click(object sender, EventArgs e)
         {
             RtbCheckFiles.Clear();
-            //will check 2 directories and their suddirectories
-
-            bool needFilter = false;//must for the GetNumberOutOfString
-            int[] numFilter = { 0 };//must for the GetNumberOutOfString
+            //will check 2 directories and their subdirectories
 
             string InvalidSeasonName = null;
             bool WasThereAnyInvalid = false;
@@ -394,11 +370,9 @@ namespace ALLinOneRename
                         string inFileSeriesName = fileInfo.Name.Split(' ')[0] + " - ";
 
                         string[] seasonArray = fileInfo.Directory.Name.Split(' ');
-                        string season;
+                        string season = "random";//this will change if needed in the next if
                         if (seasonArray.Length > 1)
                             season = seasonArray[1];
-                        else
-                            season = "dwadaww";//random - should be incorrect
 
                         if (!IsVaild(Path.GetFileNameWithoutExtension(fileInfo.FullName), fileInfo.Name, fileInfo.Extension, season, seriesName))
                         {
@@ -428,7 +402,7 @@ namespace ALLinOneRename
                 if (name == "desktop.ini" || name == "icon.ico")
                     return true;
 
-                int num = GetNumberOutOfString(name, type, "", needFilter, numFilter);
+                int num = GetNumberOutOfString(name, type, false);
 
                 //check if Season is a number
                 bool bNum = int.TryParse(Season, out int i);
@@ -575,7 +549,7 @@ namespace ALLinOneRename
             RtbRenamedText.Select(RtbRenamedText.Text.Length, 0);
         }
 
-        private int GetNumberOutOfString(string File_name, string file_type, string Side, bool needFilter, int[] numFilter)
+        private int GetNumberOutOfString(string File_name, string file_type, bool isFirst, int[] numFilter = null)
         {
             // j is current index of the file_name 
             int converted = 0;
@@ -607,17 +581,20 @@ namespace ALLinOneRename
                     default:
                         if (numbers_together != 0)
                         {
-                            if (Side == "f")
+                            if (isFirst)//if number is first then return the number 
                                 return Convert.ToInt32(numbers);
+
                             if (numbers + file_type == File_name)
                             {
                                 converted = Convert.ToInt32(numbers);
                                 number_holder = 0;
                                 goto END;           //if file is just a number then returns that number
                             }
+
                             if (numbers == "0")
                                 number_holder = 0;
-                            if (needFilter)
+
+                            if (numFilter != null)
                             {
                                 for (int i = 0; i < numFilter.Length; i++)
                                 {
@@ -632,6 +609,7 @@ namespace ALLinOneRename
                                     }
                                 }
                             }
+
                             switch (numbers)
                             {
                                 case "1":
@@ -666,14 +644,14 @@ namespace ALLinOneRename
             }
             if (converted + number_holder == number_holder)
                 return number_holder;
-            //converted + num = num that means that the season or resolution filter worked but was not necessery
+            //converted + num = num that means that the season or resolution filter worked but was not necessary
 
             return converted;
         }
 
         private void BtnTransferFilesFromDownload_Click(object sender, EventArgs e) // work in progress
         {
-            //works from the Anime site i'm downloading Anili- (it's a russian site)
+            //works from the Anime site I'm downloading Anili- (it's a Russian site)
             const string START_PATH = @"D:\torrent download\";
             const string END_PATH = @"D:\AN\Anime\";
 
