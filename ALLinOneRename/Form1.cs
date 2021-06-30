@@ -744,5 +744,4 @@ namespace ALLinOneRename
             RtbCheckFiles.Clear();
         }
     }
-
 }
