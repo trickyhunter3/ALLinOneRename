@@ -669,11 +669,17 @@ namespace ALLinOneRename
 
         private void BtnTransferFilesFromDownload_Click(object sender, EventArgs e) // work in progress
         {
-            //works from the Anime site I'm downloading Anili- (it's a Russian site)
-            const string START_PATH = @"D:\torrent download\";
-            const string END_PATH = @"D:\AN\Anime\";
+            /*
+                works when " FileName - someting.Extension " 
+                takes the string "Filename - something" and split by("-")
+                then searches the last season in the folder if exist
+                then places that episode there
+            */
 
-            string[] subdirectoryEntriesEntry = Directory.GetDirectories(START_PATH);
+            const string FILES_PATH = @"D:\torrent download\";
+            const string DESTINATION_PATH = @"D:\AN\Anime\";
+
+            string[] subdirectoryEntriesEntry = Directory.GetDirectories(FILES_PATH);
 
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
@@ -693,7 +699,7 @@ namespace ALLinOneRename
                     string SeriesName = GetSeriesName(fileInfo.Directory.Name);
                     string SeasonNum = GetLatestSeason(SeriesName);
                     string pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
-                    File.Move(fileInfo.FullName, END_PATH + pathNeeded + fileInfo.Name);
+                    File.Move(fileInfo.FullName, DESTINATION_PATH + pathNeeded + fileInfo.Name);
                     AppendColoredTextToRtb(RtbRenamedText, "Moved file: " + fileInfo.Name, Color.Blue);
                 }
                 Directory.Delete(dir);
@@ -703,18 +709,18 @@ namespace ALLinOneRename
 
             string GetLatestSeason(string SeriesName)
             {
-                string[] currentSubdirectory = Directory.GetDirectories(END_PATH);
+                string[] currentSubdirectory = Directory.GetDirectories(DESTINATION_PATH);
                 //find the series then the max season
                 foreach (string directory in currentSubdirectory)
                 {
-                    if(@"D:\AN\Anime\" + SeriesName == directory)
+                    if(DESTINATION_PATH + SeriesName == directory)
                     {
-                        int j = END_PATH.Length + SeriesName.Length + 1 + 6;
+                        int j = DESTINATION_PATH.Length + SeriesName.Length + 1 + 6;
                         string[] seasons = Directory.GetDirectories(directory);
                         int[] seasonsInNum = new int[seasons.Length];
                         for(int i = 0; i < seasons.Length; i++)
                         {
-                            seasonsInNum[i] = Convert.ToInt32(seasons[i].Substring(END_PATH.Length + SeriesName.Length + 7));//7 is the slash and the season
+                            seasonsInNum[i] = Convert.ToInt32(seasons[i].Substring(DESTINATION_PATH.Length + SeriesName.Length + 7));//7 is the slash and the season
                         }
                         int maxValue = seasonsInNum.Max();
                         return maxValue.ToString();
