@@ -57,7 +57,7 @@ namespace ALLinOneRename
                     {
                         try
                         {
-                            if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
+                            if (IsFilter(fileInfo.Name))
                                 goto END;   //filter file names
 
                             int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
@@ -137,7 +137,7 @@ namespace ALLinOneRename
                         {
                             try
                             {
-                                if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")
+                                if (IsFilter(fileInfo.Name))
                                     goto END;               //filter file names
 
                                 int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
@@ -497,7 +497,7 @@ namespace ALLinOneRename
                 foreach(FileInfo fileInfo in infos)
                 {
                     SetCursorDown();
-                    if (fileInfo.Name == "desktop.ini" || fileInfo.Name == "icon.ico")//custom icons to folders
+                    if (IsFilter(fileInfo.Name))//custom icons to folders
                         RtbRenamedText.AppendText(fileInfo.Name + " - Ignored\n");
                     else
                         RtbRenamedText.AppendText(fileInfo.Name + "\n");
@@ -742,6 +742,19 @@ namespace ALLinOneRename
         private void BtnClearCheckFilesRtb_Click(object sender, EventArgs e)
         {
             RtbCheckFiles.Clear();
+        }
+
+        private bool IsFilter(string FileName)
+        {
+            switch (FileName)
+            {
+                case "desktop.ini":
+                case "icon.ico":
+                    return true;
+
+                default:
+                    return false;
+            }
         }
     }
 }
