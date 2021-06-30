@@ -487,16 +487,6 @@ namespace ALLinOneRename
             }
         }
 
-        private void BtnClearRenamedRtb_Click(object sender, EventArgs e)
-        {
-            RtbRenamedText.Clear();
-        }
-
-        private void BtnClearCheckFilesRtb_Click(object sender, EventArgs e)
-        {
-            RtbCheckFiles.Clear();
-        }
-
         private void BtnShowFolderFiles_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(TbxPath.Text))
@@ -531,40 +521,6 @@ namespace ALLinOneRename
                 SetCursorDown();
                 AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", alertColor);
             }
-        }
-
-        protected virtual bool IsFileLocked(FileInfo file)
-        {
-            try
-            {
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-                return true;
-            }
-
-            //file is not locked
-            return false;
-        }
-
-        private void AppendColoredTextToRtb(RichTextBox rtb, string text, Color _color)
-        {
-            rtb.Focus();
-            rtb.SelectionColor = _color;
-            rtb.SelectedText += text;
-        }
-        
-        private void SetCursorDown()
-        {
-            RtbRenamedText.Select(RtbRenamedText.Text.Length, 0);
         }
 
         private int GetNumberOutOfString(string File_name, string file_type, bool isFirst, int[] numFilter = null)
@@ -742,6 +698,50 @@ namespace ALLinOneRename
         private string[] FormatTextIntoLines(string text)
         {
             return text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private void AppendColoredTextToRtb(RichTextBox rtb, string text, Color _color)
+        {
+            rtb.Focus();
+            rtb.SelectionColor = _color;
+            rtb.SelectedText += text;
+        }
+
+        private void SetCursorDown()
+        {
+            RtbRenamedText.Select(RtbRenamedText.Text.Length, 0);
+        }
+
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
+        }
+
+        private void BtnClearRenamedRtb_Click(object sender, EventArgs e)
+        {
+            RtbRenamedText.Clear();
+        }
+
+        private void BtnClearCheckFilesRtb_Click(object sender, EventArgs e)
+        {
+            RtbCheckFiles.Clear();
         }
     }
 
