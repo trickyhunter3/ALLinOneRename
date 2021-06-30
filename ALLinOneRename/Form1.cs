@@ -13,8 +13,8 @@ namespace ALLinOneRename
             InitializeComponent();
         }
 
-        Color alertColor = Color.DarkRed;
-        Color approveColor = Color.DarkGreen;
+        readonly Color alertColor = Color.DarkRed;
+        readonly Color approveColor = Color.DarkGreen;
 
         private void BtnRenameVOne_Click(object sender, EventArgs e)
         {
