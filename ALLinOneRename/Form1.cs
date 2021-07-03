@@ -368,6 +368,7 @@ namespace ALLinOneRename
                 RtbCheckFiles.AppendText(dir + Environment.NewLine);//display current location
 
                 bool IsfirstTime = true;
+                string filterPath = dir + '\\' + "Plex Versions";
 
                 string[] subdirectoryEntries = Directory.GetDirectories(dir);
                 /*
@@ -375,7 +376,7 @@ namespace ALLinOneRename
                         and DOESN'T check if the folder's name is "Plex Versions" 
                 */
 
-                if (subdirectoryEntries.Length < 1 || (dir + '\\' + "Plex Versions" == subdirectoryEntries[0] && subdirectoryEntries.Length > 1))
+                if (subdirectoryEntries.Length < 1 || (filterPath == subdirectoryEntries[0] && subdirectoryEntries.Length > 1))
                 {
                     bool thisTrySucess = true;
 
@@ -406,13 +407,13 @@ namespace ALLinOneRename
                     if (thisTrySucess) 
                         AppendColoredTextToRtb(RtbCheckFiles, "Passed\n", approveColor);
                 }
-                if (subdirectoryEntries.Length < 1)
-                    goto END;
-                // don't enter the "Plex Versions" folder
-                if (dir + '\\' + "Plex Versions" != subdirectoryEntries[0])
-                    foreach (string subdirectory in subdirectoryEntries)
-                        LoadSubDirs(subdirectory);
-                    END:;
+                else
+                {
+                    // don't enter the "Plex Versions" folder
+                    if (filterPath != subdirectoryEntries[0])
+                        foreach (string subdirectory in subdirectoryEntries)
+                            LoadSubDirs(subdirectory);
+                }
             }
 
             bool IsVaild(string NameNoType, string name, string type, string Season, string SeriesName)
