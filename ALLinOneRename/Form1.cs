@@ -57,7 +57,7 @@ namespace ALLinOneRename
                     {
                         try
                         {
-                            if (IsFilter(fileInfo.Name))
+                            if (IsFileFilter(fileInfo.Name))
                                 goto END;   //filter file names
 
                             int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
@@ -137,7 +137,7 @@ namespace ALLinOneRename
                         {
                             try
                             {
-                                if (IsFilter(fileInfo.Name))
+                                if (IsFileFilter(fileInfo.Name))
                                     goto END;               //filter file names
 
                                 int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
@@ -373,10 +373,10 @@ namespace ALLinOneRename
                 string[] subdirectoryEntries = Directory.GetDirectories(dir);
                 /*
                         only check the episodes if it's the last folder inside a folder 
-                        and DOESN'T check if the folder's name is "Plex Versions" 
+                        and you can change to not enter the folder named "Plex Versions" 
                 */
 
-                if (subdirectoryEntries.Length < 1 || (filterPath == subdirectoryEntries[0] && subdirectoryEntries.Length > 1))
+                if (subdirectoryEntries.Length < 1) // add || filterPath == subdirectoryEntries[0] to if to filter folder
                 {
                     bool thisTrySucess = true;
 
@@ -410,15 +410,15 @@ namespace ALLinOneRename
                 else
                 {
                     // don't enter the "Plex Versions" folder
-                    if (filterPath != subdirectoryEntries[0])
-                        foreach (string subdirectory in subdirectoryEntries)
-                            LoadSubDirs(subdirectory);
+                    //if (filterPath != subdirectoryEntries[0]) <-- uncomment this to not enter "Plex Versions" folder
+                    foreach (string subdirectory in subdirectoryEntries)
+                        LoadSubDirs(subdirectory);
                 }
             }
 
             bool IsVaild(string NameNoType, string name, string type, string Season, string SeriesName)
             {
-                if (name == "desktop.ini" || name == "icon.ico")
+                if (IsFileFilter(name))
                     return true;
 
                 int num = GetNumberOutOfString(name, type, false);
@@ -498,7 +498,7 @@ namespace ALLinOneRename
                 foreach(FileInfo fileInfo in infos)
                 {
                     SetCursorDown();
-                    if (IsFilter(fileInfo.Name))//custom icons to folders
+                    if (IsFileFilter(fileInfo.Name))//custom icons to folders
                         RtbRenamedText.AppendText(fileInfo.Name + " - Ignored\n");
                     else
                         RtbRenamedText.AppendText(fileInfo.Name + "\n");
@@ -745,7 +745,7 @@ namespace ALLinOneRename
             RtbCheckFiles.Clear();
         }
 
-        private bool IsFilter(string FileName)
+        private bool IsFileFilter(string FileName)
         {
             switch (FileName)
             {
