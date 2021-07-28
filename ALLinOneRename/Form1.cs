@@ -376,7 +376,7 @@ namespace ALLinOneRename
                         and you can change to not enter the folder named "Plex Versions" 
                 */
 
-                if (subdirectoryEntries.Length < 1) // add || filterPath == subdirectoryEntries[0] to if to filter folder
+                if (subdirectoryEntries.Length < 1) // add "|| filterPath == subdirectoryEntries[0]" to if to filter folder
                 {
                     bool thisTrySucess = true;
 
