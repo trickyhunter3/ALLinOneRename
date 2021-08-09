@@ -575,11 +575,10 @@ namespace ALLinOneRename
                                 {
                                     if (numFilter[i] == Convert.ToInt32(numbers))
                                     {
-                                        if (number_holder == 0)
+                                        if (number_holder != 0)
                                         {
-                                            goto END;
+                                            number_holder = Convert.ToInt32(numbers);
                                         }
-                                        number_holder = Convert.ToInt32(numbers);
                                         goto END;
                                     }
                                 }
@@ -596,17 +595,19 @@ namespace ALLinOneRename
                                 case "7":
                                 case "8":
                                 case "9":
+                                case "480":
                                 case "640":
                                 case "720":
                                 case "1080":
+                                case "1280":
                                 case "1920":
-                                case "2160":
                                 case "2010":
-                                    if (number_holder == 0)
+                                case "2160":
+                                case "3840":
+                                    if (number_holder != 0)
                                     {
-                                        goto END;
+                                        number_holder = Convert.ToInt32(numbers);
                                     }
-                                    number_holder = Convert.ToInt32(numbers);
                                     goto END;
                             }
                             converted = Convert.ToInt32(numbers);
