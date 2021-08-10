@@ -689,8 +689,15 @@ namespace ALLinOneRename
 
             string GetSeriesName(string directoryName)
             {
-                string result = directoryName.Split('-')[0];
-                result = result.Substring(0, result.Length - 1); // no need the space at the end
+                string[] nameSplited = directoryName.Split('-');
+                string result = "";
+                for(int i = 0; i < nameSplited.Length - 1; i++)
+                {
+                    result = result + nameSplited[i] + "-";
+                }
+                result = result.Substring(0, result.Length - 2);
+                //string result = directoryName.Split('-')[0];
+                //result = result.Substring(0, result.Length - 1); // no need the space at the end
 
                 return result;
             }
