@@ -342,7 +342,7 @@ namespace ALLinOneRename
             string InvalidSeasonName = null;
             bool WasThereAnyInvalid = false;
 
-            string root = @"D:\AN\Anime";
+            string root = @"E:\AN\Anime";
 
             string[] subdirectoryEntriesEntry = Directory.GetDirectories(root);
 
@@ -351,7 +351,7 @@ namespace ALLinOneRename
                 LoadSubDirs(subdirectory);
 
             // Get all subdirectories
-            root = @"D:\AN\Anime not";
+            root = @"E:\AN\Anime not";
             subdirectoryEntriesEntry = Directory.GetDirectories(root);
 
             // Loop through them to see if they have any other subdirectories
@@ -634,8 +634,8 @@ namespace ALLinOneRename
                 then places that episode there
             */
 
-            const string FILES_PATH = @"D:\torrent download\";
-            const string DESTINATION_PATH = @"D:\AN\Anime\";
+            const string FILES_PATH = @"E:\donwloads\";
+            const string DESTINATION_PATH = @"E:\AN\Anime\";
 
             string[] subdirectoryEntriesEntry = Directory.GetDirectories(FILES_PATH);
 
