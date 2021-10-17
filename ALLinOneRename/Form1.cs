@@ -3,6 +3,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace ALLinOneRename
 {
@@ -635,29 +639,55 @@ namespace ALLinOneRename
             */
 
             const string FILES_PATH = @"E:\donwloads\";
-            const string DESTINATION_PATH = @"E:\AN\Anime\";
+            const string DESTINATION_PATH1 = @"E:\AN\Anime\";
+            const string DESTINATION_PATH2 = @"E:\AN\Anime not\";
 
+            //if (File.Exists("Dictionary"))
+            
             string[] subdirectoryEntriesEntry = Directory.GetDirectories(FILES_PATH);
 
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
                 LoadSubDirs(subdirectory);
             
+            //else
+           
+            //    AppendColoredTextToRtb(RtbRenamedText, "Please use the Create button\n", Color.DarkRed);
+            
+            
             void LoadSubDirs(string dir)
             {
-                RtbRenamedText.AppendText(dir + Environment.NewLine);
+                RtbRenamedText.AppendText(dir + Environment.NewLine);//plain black text faster to write
 
                 string[] subdirectoryEntries = Directory.GetDirectories(dir);
 
                 DirectoryInfo directoryInfo = new DirectoryInfo(dir);
                 FileInfo[] infos = directoryInfo.GetFiles();
 
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+
                 foreach (FileInfo fileInfo in infos)
                 {
+                    string pathNeeded;
+                    string SeasonNum;
                     string SeriesName = GetSeriesName(fileInfo.Directory.Name);
-                    string SeasonNum = GetLatestSeason(SeriesName);
-                    string pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
-                    File.Move(fileInfo.FullName, DESTINATION_PATH + pathNeeded + fileInfo.Name);
+                    if (Directory.Exists(DESTINATION_PATH1 + SeriesName + '\\'))
+                    {
+                        SeasonNum = GetLatestSeason(SeriesName, DESTINATION_PATH1);
+                        pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
+                        File.Move(fileInfo.FullName, DESTINATION_PATH1 + pathNeeded + fileInfo.Name);
+                    }
+                    else if (Directory.Exists(DESTINATION_PATH2 + SeriesName + '\\'))
+                    {
+                        SeasonNum = GetLatestSeason(SeriesName, DESTINATION_PATH2);
+                        pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
+                        File.Move(fileInfo.FullName, DESTINATION_PATH1 + pathNeeded + fileInfo.Name);
+                    }
+                    else
+                    {
+                        AppendColoredTextToRtb(RtbRenamedText, "Directory not found", Color.DarkRed);
+
+                    }
                     AppendColoredTextToRtb(RtbRenamedText, "Moved file: " + fileInfo.Name, Color.Blue);
                 }
                 Directory.Delete(dir);
@@ -665,20 +695,20 @@ namespace ALLinOneRename
                     LoadSubDirs(subdirectory);
             }
 
-            string GetLatestSeason(string SeriesName)
+            string GetLatestSeason(string SeriesName, string dest)
             {
-                string[] currentSubdirectory = Directory.GetDirectories(DESTINATION_PATH);
+                string[] currentSubdirectory = Directory.GetDirectories(dest);
                 //find the series then the max season
                 foreach (string directory in currentSubdirectory)
                 {
-                    if(DESTINATION_PATH + SeriesName == directory)
+                    if(dest + SeriesName == directory)
                     {
-                        int j = DESTINATION_PATH.Length + SeriesName.Length + 1 + 6;
+                        int j = dest.Length + SeriesName.Length + 1 + 6;
                         string[] seasons = Directory.GetDirectories(directory);
                         int[] seasonsInNum = new int[seasons.Length];
                         for(int i = 0; i < seasons.Length; i++)
                         {
-                            seasonsInNum[i] = Convert.ToInt32(seasons[i].Substring(DESTINATION_PATH.Length + SeriesName.Length + 7));//7 is the slash and the season
+                            seasonsInNum[i] = Convert.ToInt32(seasons[i].Substring(dest.Length + SeriesName.Length + 7));//7 is the slash and the season
                         }
                         int maxValue = seasonsInNum.Max();
                         return maxValue.ToString();
@@ -763,6 +793,55 @@ namespace ALLinOneRename
 
                 default:
                     return false;
+            }
+        }
+
+        private void BtnCreateHashTable_Click(object sender, EventArgs e)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                string root = @"E:\AN\Anime";
+                using (StreamWriter writer = new StreamWriter("Dictionary.txt"))
+                {
+                    string[] subdirectoryEntries = Directory.GetDirectories(root);
+
+                    foreach (string subdirectory in subdirectoryEntries)
+                    {
+                        string hash = GetHash(sha256Hash, subdirectory);
+                        hash = hash.Substring(0, 15);
+                        writer.Write(hash + '|' + subdirectory + '|');
+                    }
+                    root = @"E:\AN\Anime not";
+                    subdirectoryEntries = Directory.GetDirectories(root);
+
+                    foreach (string subdirectory in subdirectoryEntries)
+                    {
+                        string hash = GetHash(sha256Hash, subdirectory);
+                        hash = hash.Substring(0, 15);
+                        writer.Write(hash + '|' + subdirectory + '|');
+                    }
+                }
+            }
+
+            string GetHash(HashAlgorithm hashAlgorithm, string input)
+            {
+
+                // Convert the input string to a byte array and compute the hash.
+                byte[] data = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+                // Create a new Stringbuilder to collect the bytes
+                // and create a string.
+                var sBuilder = new StringBuilder();
+
+                // Loop through each byte of the hashed data
+                // and format each one as a hexadecimal string.
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sBuilder.Append(data[i].ToString("x2"));
+                }
+
+                // Return the hexadecimal string.
+                return sBuilder.ToString();
             }
         }
     }

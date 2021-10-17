@@ -55,6 +55,8 @@ namespace ALLinOneRename
             this.BtnTransferFilesFromDownload = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.BtnCreateHashTable = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -304,12 +306,33 @@ namespace ALLinOneRename
             this.label9.TabIndex = 25;
             this.label9.Text = "only one line";
             // 
+            // BtnCreateHashTable
+            // 
+            this.BtnCreateHashTable.Location = new System.Drawing.Point(4, 270);
+            this.BtnCreateHashTable.Name = "BtnCreateHashTable";
+            this.BtnCreateHashTable.Size = new System.Drawing.Size(46, 23);
+            this.BtnCreateHashTable.TabIndex = 26;
+            this.BtnCreateHashTable.Text = "create ";
+            this.BtnCreateHashTable.UseVisualStyleBackColor = true;
+            this.BtnCreateHashTable.Click += new System.EventHandler(this.BtnCreateHashTable_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(1, 307);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(89, 13);
+            this.label10.TabIndex = 27;
+            this.label10.Text = "Create Hashtable";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1194, 450);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.BtnCreateHashTable);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.BtnTransferFilesFromDownload);
@@ -372,6 +395,8 @@ namespace ALLinOneRename
         private System.Windows.Forms.Button BtnTransferFilesFromDownload;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button BtnCreateHashTable;
+        private System.Windows.Forms.Label label10;
     }
 }
 
