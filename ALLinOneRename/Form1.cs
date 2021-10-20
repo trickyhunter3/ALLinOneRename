@@ -665,12 +665,12 @@ namespace ALLinOneRename
                 FileInfo[] infos = directoryInfo.GetFiles();
 
                 Dictionary<string, string> dic = new Dictionary<string, string>();
-
                 foreach (FileInfo fileInfo in infos)
                 {
                     string pathNeeded;
                     string SeasonNum;
                     string SeriesName = GetSeriesName(fileInfo.Directory.Name);
+
                     if (Directory.Exists(DESTINATION_PATH1 + SeriesName + '\\'))
                     {
                         SeasonNum = GetLatestSeason(SeriesName, DESTINATION_PATH1);
@@ -681,7 +681,7 @@ namespace ALLinOneRename
                     {
                         SeasonNum = GetLatestSeason(SeriesName, DESTINATION_PATH2);
                         pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
-                        File.Move(fileInfo.FullName, DESTINATION_PATH1 + pathNeeded + fileInfo.Name);
+                        File.Move(fileInfo.FullName, DESTINATION_PATH2 + pathNeeded + fileInfo.Name);
                     }
                     else
                     {
