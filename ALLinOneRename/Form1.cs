@@ -57,6 +57,8 @@ namespace ALLinOneRename
 
                     bool renameSuccess = true;
 
+                    Dictionary<string, int> dict = CreateDictionary(usersPath);//for V2 GetNumber...
+
                     foreach (FileInfo fileInfo in infos)
                     {
                         try
@@ -64,7 +66,8 @@ namespace ALLinOneRename
                             if (IsFileFilter(fileInfo.Name))
                                 goto END;   //filter file names
 
-                            int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
+                            int numberFromTheString = GetNumberOutOfStringV2(dict, Path.GetFileNameWithoutExtension(fileInfo.Name));
+                            //int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
 
                             File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
 
@@ -97,7 +100,7 @@ namespace ALLinOneRename
             }
         }
 
-        private void BtnRenameVTwo_Click(object sender, EventArgs e)
+        private void BtnRenameVTwo_Click(object sender, EventArgs e)    
         {
             string[] lines = FormatTextIntoLines(TbxPath.Text);
             for (int ind = 0; ind < lines.Length; ind++)
@@ -134,6 +137,8 @@ namespace ALLinOneRename
 
                     bool renameSuccess = true;
 
+                    Dictionary<string, int> dict = CreateDictionary(usersPath);//for V2 GetNumber...
+
                     foreach (FileInfo fileInfo in infos)
                     {
 
@@ -143,8 +148,8 @@ namespace ALLinOneRename
                             {
                                 if (IsFileFilter(fileInfo.Name))
                                     goto END;               //filter file names
-
-                                int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
+                                int numberFromTheString = GetNumberOutOfStringV2(dict, Path.GetFileNameWithoutExtension(fileInfo.Name));//must create dictionary first
+                                //int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
 
                                 string seasonNum;                                  //Season number of the current file
 
