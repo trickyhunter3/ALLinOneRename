@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace ALLinOneRename
 {
@@ -346,22 +346,21 @@ namespace ALLinOneRename
             string InvalidSeasonName = null;
             bool WasThereAnyInvalid = false;
 
-            string root = @"E:\AN\Anime";
+            string root = @"E:\AN\Anime\";
 
             string[] subdirectoryEntriesEntry = Directory.GetDirectories(root);
-
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
                 LoadSubDirs(subdirectory);
-
+            
             // Get all subdirectories
-            root = @"E:\AN\Anime not";
+            root = @"E:\AN\Anime not\";
             subdirectoryEntriesEntry = Directory.GetDirectories(root);
 
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
                 LoadSubDirs(subdirectory);
-
+            
             if (WasThereAnyInvalid)
                 AppendColoredTextToRtb(RtbCheckFiles, "\nProblem\n" + InvalidSeasonName + Environment.NewLine, alertColor);
             else
@@ -425,6 +424,7 @@ namespace ALLinOneRename
                 if (IsFileFilter(name))
                     return true;
 
+                //int num = GetNumberOutOfStringV2(dict, NameNoType); //10 ms longer and won't work 
                 int num = GetNumberOutOfString(name, type, false);
 
                 //check if Season is a number
@@ -798,6 +798,8 @@ namespace ALLinOneRename
 
         private void BtnCreateHashTable_Click(object sender, EventArgs e)
         {
+            
+            //this function is not needed, 3 hours of waste
             using (SHA256 sha256Hash = SHA256.Create())
             {
                 string root = @"E:\AN\Anime";
@@ -844,5 +846,88 @@ namespace ALLinOneRename
                 return sBuilder.ToString();
             }
         }
+
+        private int GetNumberOutOfStringV2(Dictionary<string, int> dict, string filename)
+        {
+            /*
+                must have at least 2 files
+                machine learning ? idk
+
+                how works:
+                takes all the files in the folder
+                gets all the numbers in the file names
+                gets all the numbers in the file names and count them
+                use the the most NOT used number
+                that probably the number i need
+                
+                exeptions and solutions:
+                
+                1.
+                if there is more then one most NOT used number
+                but there is a most used number that is 1 above every other number
+                (example: [AniFilm] Tonari no Kaibutsu-kun [TV] [13 of 13] [HDTVRip 1280x720 x264] [Ru Jp] [DemonOFmooN & MezIdA],
+                all the other files are the same stracture just the episode is changing - "1 of 13" and so on)
+                solution will be: 
+                to check if there is more then 1 most NOT used number
+                and if true then use the most used number
+            */
+            string[] nums = Regex.Split(filename, @"\D+");
+            nums = nums.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+            for (int i = 0; i < nums.Length; i++)
+            {
+
+                dict.TryGetValue(nums[i], out int val);
+                if (val == 1)
+                    return Convert.ToInt32(nums[i]);
+            }
+            dict.TryGetValue(nums[0], out int max);
+            int current;
+            int index = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                dict.TryGetValue(nums[i], out current);
+                if (max < current)
+                {
+                    max = current;
+                    index = i;
+                }
+            }
+                return Convert.ToInt32(nums[index]);
+        }
+
+        private Dictionary<string, int> CreateDictionary(string path)
+        {
+            Dictionary<string, int> dict = new Dictionary<string, int>();
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            FileInfo[] infos = directoryInfo.GetFiles();
+
+            foreach (FileInfo fileInfo in infos)
+            {
+                ///get all the numbers from a string
+                string[] numbers = Regex.Split(fileInfo.Name, @"\D+");
+                int val;
+                for(int i = 0; i < numbers.Length; i++)
+                {
+                    if (numbers[i] == "") continue;
+                    if (dict.ContainsKey(numbers[i]))
+                    {
+                        //appending the value of the dict in that place
+                        dict.TryGetValue(numbers[i], out val);
+                        val++;
+                        dict.Remove(numbers[i]);
+                        dict.Add(numbers[i], val);
+                    }
+                    else
+                    {
+                        dict.Add(numbers[i], 1);//found at least 1
+                    }
+                }
+            }
+
+            return dict;
+        }
+
     }
 }
