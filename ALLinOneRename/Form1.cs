@@ -33,7 +33,8 @@ namespace ALLinOneRename
                     if (usersPath[usersPath.Length - 1] != '\\')
                         usersPath += '\\';
 
-                    bool isNumberFirst = CbxIsNumberFirstV2.Checked;
+                    bool isNumberFirst = CbxIsNumberFirstV1.Checked;
+                    bool isNumberLast = CbxIsNumberLast.Checked;
 
                     if (TbxFilterNumbersV1.Text != "")
                     {
@@ -66,9 +67,17 @@ namespace ALLinOneRename
                             if (IsFileFilter(fileInfo.Name))
                                 goto END;   //filter file names
 
-                            int numberFromTheString = GetNumberOutOfStringV2(dict, Path.GetFileNameWithoutExtension(fileInfo.Name));
-                            //int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
+                            int numberFromTheString;
 
+
+                            if (CbxIsV2Func.Checked)
+                            {
+                                numberFromTheString = GetNumberOutOfStringV2(dict, Path.GetFileNameWithoutExtension(fileInfo.Name));
+                            }
+                            else
+                            {
+                                numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, isNumberLast, numFilter);
+                            }
                             File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
 
                             SetCursorDown();
@@ -113,7 +122,8 @@ namespace ALLinOneRename
                     if (usersPath[usersPath.Length - 1] != '\\')
                         usersPath += '\\';
 
-                    bool isNumberFirst = CbxIsNumberFirstV2.Checked;
+                    bool isNumberFirst = CbxIsNumberFirstV1.Checked;
+                    bool isNumberLast = CbxIsNumberLast.Checked;
                     if (TbxFilterNumbersV1.Text != "")
                     {
                         string[] stringToNum;
@@ -147,10 +157,18 @@ namespace ALLinOneRename
                             try
                             {
                                 if (IsFileFilter(fileInfo.Name))
-                                    goto END;               //filter file names
-                                int numberFromTheString = GetNumberOutOfStringV2(dict, Path.GetFileNameWithoutExtension(fileInfo.Name));//must create dictionary first
-                                //int numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, numFilter);
+                                    goto END;       //filter file names
 
+                                int numberFromTheString = 0;
+
+                                if (CbxIsV2Func.Checked)
+                                {
+                                    numberFromTheString = GetNumberOutOfStringV2(dict, Path.GetFileNameWithoutExtension(fileInfo.Name));//must create dictionary first
+                                }
+                                else
+                                {
+                                    numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, isNumberLast, numFilter);
+                                }
                                 string seasonNum;                                  //Season number of the current file
 
                                 string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
@@ -430,7 +448,7 @@ namespace ALLinOneRename
                     return true;
 
                 //int num = GetNumberOutOfStringV2(dict, NameNoType); //10 ms longer and won't work 
-                int num = GetNumberOutOfString(name, type, false);
+                int num = GetNumberOutOfString(name, type);
 
                 //check if Season is a number
                 bool bNum = int.TryParse(Season, out int i);
@@ -533,10 +551,11 @@ namespace ALLinOneRename
             }
         }
 
-        private int GetNumberOutOfString(string File_name, string file_type, bool isFirst, int[] numFilter = null)
+        private int GetNumberOutOfString(string File_name, string file_type, bool isFirst = false, bool isLast = false, int[] numFilter = null)
         {
             // j is current index of the file_name 
             int converted = 0;
+            string numLast = "";//remember every number to know the last one
             //if we find a number that is episode then i++ happen so we save the episode number and 
             //on the next run when it find a season number or resolution number it will go to 0 on the next int not on the
             //episode number itself
@@ -567,6 +586,8 @@ namespace ALLinOneRename
                         {
                             if (isFirst)//if number is first then return the number 
                                 return Convert.ToInt32(numbers);
+                            if (isLast)
+                                numLast = numbers;
 
                             if (numbers + file_type == File_name)
                             {
@@ -627,6 +648,8 @@ namespace ALLinOneRename
                         break;
                 }
             }
+            if (isLast)
+                return Convert.ToInt32(numLast);
             if (converted + number_holder == number_holder)
                 return number_holder;
             //converted + num = num that means that the season or resolution filter worked but was not necessary
