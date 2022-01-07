@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<general>
+    <paths>
+        <path name="Anime">
+	<value>E:\AN\Anime\</value>
+	</path>
+	<path name="Anime Not">
+	<value>E:\AN\Anime not\</value>
+	</path>
+	<path name="Download">
+	<value>E:\Downloads\</value>
+	</path>
+    </paths>
+</general>

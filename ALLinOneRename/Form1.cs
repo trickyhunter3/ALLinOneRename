@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ALLinOneRename
 {
@@ -369,7 +370,30 @@ namespace ALLinOneRename
             string InvalidSeasonName = null;
             bool WasThereAnyInvalid = false;
 
-            string root = @"E:\AN\Anime\";
+            //get paths from xml file
+            string firstPath = "", secondPath = "";
+            var reader = XmlReader.Create("Paths.xml");
+            reader.ReadToFollowing("path");
+            do
+            {
+                reader.MoveToFirstAttribute();
+                if (reader.Value == "Anime")
+                {
+                    reader.ReadToFollowing("value");
+                    firstPath = reader.ReadElementContentAsString();
+                }
+                if (reader.Value == "Anime Not")
+                {
+                    reader.ReadToFollowing("value");
+                    secondPath = reader.ReadElementContentAsString();
+                    break;
+                }
+            } while (reader.ReadToFollowing("path"));
+
+            reader.Close();
+            reader.Dispose();
+
+            string root = firstPath;
 
             string[] subdirectoryEntriesEntry = Directory.GetDirectories(root);
             // Loop through them to see if they have any other subdirectories
@@ -377,7 +401,7 @@ namespace ALLinOneRename
                 LoadSubDirs(subdirectory);
             
             // Get all subdirectories
-            root = @"E:\AN\Anime not\";
+            root = secondPath;
             subdirectoryEntriesEntry = Directory.GetDirectories(root);
 
             // Loop through them to see if they have any other subdirectories
@@ -665,14 +689,36 @@ namespace ALLinOneRename
                 then searches the last season in the folder if exist
                 then places that episode there
             */
+            //get Paths from xml file
+            string firstPath = "", secondPath = "", downloadPath = "";
+            var reader = XmlReader.Create("Paths.xml");
+            reader.ReadToFollowing("path");
+            do
+            {
+                reader.MoveToFirstAttribute();
+                if (reader.Value == "Anime")
+                {
+                    reader.ReadToFollowing("value");
+                    firstPath = reader.ReadElementContentAsString();
+                }
+                if (reader.Value == "Anime Not")
+                {
+                    reader.ReadToFollowing("value");
+                    secondPath = reader.ReadElementContentAsString();
+                }
+                if (reader.Value == "Download")
+                {
+                    reader.ReadToFollowing("value");
+                    downloadPath = reader.ReadElementContentAsString();
+                }
+            } while (reader.ReadToFollowing("path"));
 
-            const string FILES_PATH = @"E:\donwloads\";
-            const string DESTINATION_PATH1 = @"E:\AN\Anime\";
-            const string DESTINATION_PATH2 = @"E:\AN\Anime not\";
+            reader.Close();
+            reader.Dispose();
 
             //if (File.Exists("Dictionary"))
             
-            string[] subdirectoryEntriesEntry = Directory.GetDirectories(FILES_PATH);
+            string[] subdirectoryEntriesEntry = Directory.GetDirectories(downloadPath);
 
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
@@ -699,17 +745,17 @@ namespace ALLinOneRename
                     string SeasonNum;
                     string SeriesName = GetSeriesName(fileInfo.Directory.Name);
 
-                    if (Directory.Exists(DESTINATION_PATH1 + SeriesName + '\\'))
+                    if (Directory.Exists(firstPath + SeriesName + '\\'))
                     {
-                        SeasonNum = GetLatestSeason(SeriesName, DESTINATION_PATH1);
+                        SeasonNum = GetLatestSeason(SeriesName, firstPath);
                         pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
-                        File.Move(fileInfo.FullName, DESTINATION_PATH1 + pathNeeded + fileInfo.Name);
+                        File.Move(fileInfo.FullName, firstPath + pathNeeded + fileInfo.Name);
                     }
-                    else if (Directory.Exists(DESTINATION_PATH2 + SeriesName + '\\'))
+                    else if (Directory.Exists(secondPath + SeriesName + '\\'))
                     {
-                        SeasonNum = GetLatestSeason(SeriesName, DESTINATION_PATH2);
+                        SeasonNum = GetLatestSeason(SeriesName, secondPath);
                         pathNeeded = SeriesName + '\\' + "Season " + SeasonNum + '\\';
-                        File.Move(fileInfo.FullName, DESTINATION_PATH2 + pathNeeded + fileInfo.Name);
+                        File.Move(fileInfo.FullName, secondPath + pathNeeded + fileInfo.Name);
                     }
                     else
                     {
@@ -820,17 +866,42 @@ namespace ALLinOneRename
                     return true;
 
                 default:
-                    return false;
+                    break;
             }
+            string[] ext = FileName.Split('.');
+            if (ext[ext.Length - 1] == "nfo")
+                return true;
+            return false;
         }
 
         private void BtnCreateHashTable_Click(object sender, EventArgs e)
         {
-            
+
+            //get Paths from Xml file
+            string firstPath = "", secondPath = "";
+            var reader = XmlReader.Create("Paths.xml");
+            reader.ReadToFollowing("path");
+            do
+            {
+                reader.MoveToFirstAttribute();
+                if (reader.Value == "Anime")
+                {
+                    reader.ReadToFollowing("value");
+                    firstPath = reader.ReadElementContentAsString();
+                }
+                if (reader.Value == "Anime Not")
+                {
+                    reader.ReadToFollowing("value");
+                    secondPath = reader.ReadElementContentAsString();
+                    break;
+                }
+            } while (reader.ReadToFollowing("path"));
+            reader.Close();
+            reader.Dispose();
             //this function is not needed, 3 hours of waste
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                string root = @"E:\AN\Anime";
+                string root = firstPath;
                 using (StreamWriter writer = new StreamWriter("Dictionary.txt"))
                 {
                     string[] subdirectoryEntries = Directory.GetDirectories(root);
@@ -841,7 +912,7 @@ namespace ALLinOneRename
                         hash = hash.Substring(0, 15);
                         writer.Write(hash + '|' + subdirectory + '|');
                     }
-                    root = @"E:\AN\Anime not";
+                    root = secondPath;
                     subdirectoryEntries = Directory.GetDirectories(root);
 
                     foreach (string subdirectory in subdirectoryEntries)
@@ -933,6 +1004,7 @@ namespace ALLinOneRename
 
             foreach (FileInfo fileInfo in infos)
             {
+                if (IsFileFilter(fileInfo.Name)) continue;
                 ///get all the numbers from a string
                 string[] numbers = Regex.Split(fileInfo.Name, @"\D+");
                 int val;
