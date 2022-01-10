@@ -11,9 +11,9 @@ using System.Xml;
 
 namespace ALLinOneRename
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -371,27 +371,8 @@ namespace ALLinOneRename
             bool WasThereAnyInvalid = false;
 
             //get paths from xml file
-            string firstPath = "", secondPath = "";
-            var reader = XmlReader.Create("Paths.xml");
-            reader.ReadToFollowing("path");
-            do
-            {
-                reader.MoveToFirstAttribute();
-                if (reader.Value == "Anime")
-                {
-                    reader.ReadToFollowing("value");
-                    firstPath = reader.ReadElementContentAsString();
-                }
-                if (reader.Value == "Anime Not")
-                {
-                    reader.ReadToFollowing("value");
-                    secondPath = reader.ReadElementContentAsString();
-                    break;
-                }
-            } while (reader.ReadToFollowing("path"));
-
-            reader.Close();
-            reader.Dispose();
+            string firstPath = GetPathsFromXmlFile("Anime");
+            string secondPath = GetPathsFromXmlFile("Anime Not");
 
             string root = firstPath;
 
@@ -690,31 +671,9 @@ namespace ALLinOneRename
                 then places that episode there
             */
             //get Paths from xml file
-            string firstPath = "", secondPath = "", downloadPath = "";
-            var reader = XmlReader.Create("Paths.xml");
-            reader.ReadToFollowing("path");
-            do
-            {
-                reader.MoveToFirstAttribute();
-                if (reader.Value == "Anime")
-                {
-                    reader.ReadToFollowing("value");
-                    firstPath = reader.ReadElementContentAsString();
-                }
-                if (reader.Value == "Anime Not")
-                {
-                    reader.ReadToFollowing("value");
-                    secondPath = reader.ReadElementContentAsString();
-                }
-                if (reader.Value == "Download")
-                {
-                    reader.ReadToFollowing("value");
-                    downloadPath = reader.ReadElementContentAsString();
-                }
-            } while (reader.ReadToFollowing("path"));
-
-            reader.Close();
-            reader.Dispose();
+            string firstPath = GetPathsFromXmlFile("Anime");
+            string secondPath = GetPathsFromXmlFile("Anime Not");
+            string downloadPath = GetPathsFromXmlFile("Download");
 
             //if (File.Exists("Dictionary"))
             
@@ -732,6 +691,8 @@ namespace ALLinOneRename
             void LoadSubDirs(string dir)
             {
                 RtbRenamedText.AppendText(dir + Environment.NewLine);//plain black text faster to write
+
+                bool didFindDirectory = true;
 
                 string[] subdirectoryEntries = Directory.GetDirectories(dir);
 
@@ -759,12 +720,19 @@ namespace ALLinOneRename
                     }
                     else
                     {
-                        AppendColoredTextToRtb(RtbRenamedText, "Directory not found", Color.DarkRed);
-
+                        AppendColoredTextToRtb(RtbRenamedText, "Directory not found", alertColor);
+                        didFindDirectory = false;
                     }
+                    SetCursorDown();
                     AppendColoredTextToRtb(RtbRenamedText, "Moved file: " + fileInfo.Name, Color.Blue);
                 }
-                Directory.Delete(dir);
+                if(didFindDirectory)
+                    Directory.Delete(dir);
+                else
+                {
+                    SetCursorDown();
+                    AppendColoredTextToRtb(RtbRenamedText, "Cannot delete folder (not empty)", alertColor);
+                }
                 foreach (string subdirectory in subdirectoryEntries)
                     LoadSubDirs(subdirectory);
             }
@@ -878,26 +846,9 @@ namespace ALLinOneRename
         {
 
             //get Paths from Xml file
-            string firstPath = "", secondPath = "";
-            var reader = XmlReader.Create("Paths.xml");
-            reader.ReadToFollowing("path");
-            do
-            {
-                reader.MoveToFirstAttribute();
-                if (reader.Value == "Anime")
-                {
-                    reader.ReadToFollowing("value");
-                    firstPath = reader.ReadElementContentAsString();
-                }
-                if (reader.Value == "Anime Not")
-                {
-                    reader.ReadToFollowing("value");
-                    secondPath = reader.ReadElementContentAsString();
-                    break;
-                }
-            } while (reader.ReadToFollowing("path"));
-            reader.Close();
-            reader.Dispose();
+            string firstPath = GetPathsFromXmlFile("Anime");
+            string secondPath = GetPathsFromXmlFile("Anime Not");
+
             //this function is not needed, 3 hours of waste
             using (SHA256 sha256Hash = SHA256.Create())
             {
@@ -1027,6 +978,22 @@ namespace ALLinOneRename
             }
 
             return dict;
+        }
+
+        private string GetPathsFromXmlFile(string userKeyWord)
+        {
+            var reader = XmlReader.Create("Paths.xml");
+            reader.ReadToFollowing("path");
+            do
+            {
+                reader.MoveToFirstAttribute();
+                if (reader.Value == userKeyWord)
+                {
+                    reader.ReadToFollowing("value");
+                    return reader.ReadElementContentAsString();
+                }
+            } while (reader.ReadToFollowing("path"));
+            return "Fail";
         }
 
     }
