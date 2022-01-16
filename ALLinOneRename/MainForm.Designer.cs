@@ -54,6 +54,7 @@ namespace ALLinOneRename
             this.BtnCreateHashTable = new System.Windows.Forms.Button();
             this.CbxIsNumberLast = new System.Windows.Forms.CheckBox();
             this.CbxIsV2Func = new System.Windows.Forms.CheckBox();
+            this.CbxIsNumberSecond = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // BtnRenameVOne
@@ -280,7 +281,7 @@ namespace ALLinOneRename
             // CbxIsNumberLast
             // 
             this.CbxIsNumberLast.AutoSize = true;
-            this.CbxIsNumberLast.Location = new System.Drawing.Point(4, 215);
+            this.CbxIsNumberLast.Location = new System.Drawing.Point(4, 235);
             this.CbxIsNumberLast.Name = "CbxIsNumberLast";
             this.CbxIsNumberLast.Size = new System.Drawing.Size(97, 17);
             this.CbxIsNumberLast.TabIndex = 27;
@@ -299,12 +300,23 @@ namespace ALLinOneRename
             this.CbxIsV2Func.Text = "Use GetNumberV2 function";
             this.CbxIsV2Func.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // CbxIsNumberSecond
+            // 
+            this.CbxIsNumberSecond.AutoSize = true;
+            this.CbxIsNumberSecond.Location = new System.Drawing.Point(4, 212);
+            this.CbxIsNumberSecond.Name = "CbxIsNumberSecond";
+            this.CbxIsNumberSecond.Size = new System.Drawing.Size(114, 17);
+            this.CbxIsNumberSecond.TabIndex = 29;
+            this.CbxIsNumberSecond.Text = "Is Number Second";
+            this.CbxIsNumberSecond.UseVisualStyleBackColor = true;
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1194, 450);
+            this.Controls.Add(this.CbxIsNumberSecond);
             this.Controls.Add(this.CbxIsV2Func);
             this.Controls.Add(this.CbxIsNumberLast);
             this.Controls.Add(this.BtnCreateHashTable);
@@ -331,7 +343,7 @@ namespace ALLinOneRename
             this.Controls.Add(this.BtnSubtractName);
             this.Controls.Add(this.BtnRenameVOne);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Renamer";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -365,6 +377,7 @@ namespace ALLinOneRename
         private System.Windows.Forms.Button BtnCreateHashTable;
         private System.Windows.Forms.CheckBox CbxIsNumberLast;
         private System.Windows.Forms.CheckBox CbxIsV2Func;
+        private System.Windows.Forms.CheckBox CbxIsNumberSecond;
     }
 }
 

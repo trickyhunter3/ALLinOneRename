@@ -35,6 +35,7 @@ namespace ALLinOneRename
                         usersPath += '\\';
 
                     bool isNumberFirst = CbxIsNumberFirstV1.Checked;
+                    bool isNumberSecond = CbxIsNumberSecond.Checked;
                     bool isNumberLast = CbxIsNumberLast.Checked;
 
                     if (TbxFilterNumbersV1.Text != "")
@@ -77,7 +78,7 @@ namespace ALLinOneRename
                             }
                             else
                             {
-                                numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, isNumberLast, numFilter);
+                                numberFromTheString = GetNumberOutOfString(fileInfo.Name, fileInfo.Extension, isNumberFirst, isNumberLast, numFilter, isNumberSecond);
                             }
                             File.Move(fileInfo.FullName, usersPath + numberFromTheString + fileInfo.Extension);
 
@@ -556,7 +557,7 @@ namespace ALLinOneRename
             }
         }
 
-        private int GetNumberOutOfString(string File_name, string file_type, bool isFirst = false, bool isLast = false, int[] numFilter = null)
+        private int GetNumberOutOfString(string File_name, string file_type, bool isFirst = false, bool isLast = false, int[] numFilter = null, bool isSecond = false)
         {
             // j is current index of the file_name 
             int converted = 0;
@@ -564,6 +565,7 @@ namespace ALLinOneRename
             //if we find a number that is episode then i++ happen so we save the episode number and 
             //on the next run when it find a season number or resolution number it will go to 0 on the next int not on the
             //episode number itself
+            bool isSecondNumHere = false;//there is always first num first
             int numbers_together = 0;
             //when he find number he start to count so that it won't check if statement IF he is not at least 1 number
             int number_holder = -1;
@@ -591,6 +593,12 @@ namespace ALLinOneRename
                         {
                             if (isFirst)//if number is first then return the number 
                                 return Convert.ToInt32(numbers);
+                            if (isSecond)
+                            {
+                                if(isSecondNumHere)
+                                    return Convert.ToInt32(numbers);
+                                isSecondNumHere = true;
+                            }  
                             if (isLast)
                                 numLast = numbers;
 
