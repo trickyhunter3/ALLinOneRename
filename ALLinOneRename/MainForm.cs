@@ -18,8 +18,8 @@ namespace ALLinOneRename
             InitializeComponent();
         }
 
-        readonly Color alertColor = Color.DarkRed;
-        readonly Color approveColor = Color.DarkGreen;
+        private readonly Color alertColor = Color.DarkRed;
+        private readonly Color approveColor = Color.DarkGreen;
 
         private void BtnRenameVOne_Click(object sender, EventArgs e)
         {
@@ -71,7 +71,6 @@ namespace ALLinOneRename
 
                             int numberFromTheString;
 
-
                             if (CbxIsV2Func.Checked)
                             {
                                 numberFromTheString = GetNumberOutOfStringV2(dict, Path.GetFileNameWithoutExtension(fileInfo.Name));
@@ -90,7 +89,7 @@ namespace ALLinOneRename
                             renameSuccess = false;
                             AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", alertColor);
                         }
-                        END:;
+                    END:;
                     }
                     if (renameSuccess)
                     {
@@ -111,7 +110,7 @@ namespace ALLinOneRename
             }
         }
 
-        private void BtnRenameVTwo_Click(object sender, EventArgs e)    
+        private void BtnRenameVTwo_Click(object sender, EventArgs e)
         {
             string[] lines = FormatTextIntoLines(TbxPath.Text);
             for (int ind = 0; ind < lines.Length; ind++)
@@ -153,7 +152,6 @@ namespace ALLinOneRename
 
                     foreach (FileInfo fileInfo in infos)
                     {
-
                         if (!IsFileLocked(fileInfo))
                         {
                             try
@@ -174,8 +172,46 @@ namespace ALLinOneRename
                                 string seasonNum;                                  //Season number of the current file
 
                                 string[] seasonAndNumberSplited = fileInfo.Directory.Name.Split(' ');          //if the directory has season in it, will fail if no space
+                                if (fileInfo.Extension != ".ass")
+                                {
+                                    if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season
+                                    {
+                                        string seriesName = fileInfo.Directory.Parent.Name;
 
-                                if (seasonAndNumberSplited[0].ToLower() == "season")                           //if the directory name is season 
+                                        seasonNum = seasonAndNumberSplited[1];
+
+                                        string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
+
+                                        File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
+
+                                        SetCursorDown();
+                                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
+                                    }
+                                    else //if directory name was not season then create a season folder
+                                    {
+                                        string seriesName = fileInfo.Directory.Name;
+
+                                        seasonNum = "1"; //set SeasonNum to 1
+
+                                        string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
+
+                                        string newPath = fileInfo.DirectoryName + '\\' + "Season " + seasonNum + '\\';
+
+                                        if (!Directory.Exists(newPath))
+                                        {
+                                            RtbRenamedText.Focus();
+
+                                            RtbRenamedText.AppendText("Created Folder: Season " + seasonNum + Environment.NewLine);
+                                            Directory.CreateDirectory(newPath);
+                                        }
+
+                                        File.Move(fileInfo.FullName, newPath + finalName + fileInfo.Extension);
+
+                                        SetCursorDown();
+                                        AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
+                                    }
+                                }
+                                else
                                 {
                                     string seriesName = fileInfo.Directory.Parent.Name;
 
@@ -183,31 +219,7 @@ namespace ALLinOneRename
 
                                     string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
 
-                                    File.Move(fileInfo.FullName, usersPath + finalName + fileInfo.Extension);
-
-                                    SetCursorDown();
-                                    AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
-                                }
-
-                                else //if directory name was not season then create a season folder
-                                {
-                                    string seriesName = fileInfo.Directory.Name;
-
-                                    seasonNum = "1"; //set SeasonNum to 1
-
-                                    string finalName = CreateFinalName(numberFromTheString, seasonNum, seriesName);
-
-                                    string newPath = fileInfo.DirectoryName + '\\' + "Season " + seasonNum + '\\';
-
-                                    if (!Directory.Exists(newPath))
-                                    {
-                                        RtbRenamedText.Focus();
-
-                                        RtbRenamedText.AppendText("Created Folder: Season " + seasonNum + Environment.NewLine);
-                                        Directory.CreateDirectory(newPath);
-                                    }
-
-                                    File.Move(fileInfo.FullName, newPath + finalName + fileInfo.Extension);
+                                    File.Move(fileInfo.FullName, usersPath + finalName + ".eng" + fileInfo.Extension);
 
                                     SetCursorDown();
                                     AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " --> " + finalName + Environment.NewLine, Color.Blue);
@@ -218,7 +230,7 @@ namespace ALLinOneRename
                                 renameSuccess = false;
                                 AppendColoredTextToRtb(RtbRenamedText, fileInfo.Name + " Already exist\n", alertColor);
                             }
-                            END:;
+                        END:;
                         }
                         else
                         {
@@ -262,7 +274,7 @@ namespace ALLinOneRename
                     AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", alertColor);
                 }
             }
-            if(lines.Length < 1)
+            if (lines.Length < 1)
             {
                 SetCursorDown();
                 AppendColoredTextToRtb(RtbRenamedText, "PATH DOES NOT EXIST\n", alertColor);
@@ -320,7 +332,7 @@ namespace ALLinOneRename
                             {
                                 if (fileInfo.Name != "icon.ico")
                                 {
-                                    subtracted = Convert.ToInt32(converted) + infos.Length; //add 
+                                    subtracted = Convert.ToInt32(converted) + infos.Length; //add
 
                                     File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
                                 }
@@ -339,7 +351,7 @@ namespace ALLinOneRename
                                 {
                                     string originalFileName = (Convert.ToInt32(converted) - infos.Length).ToString();
 
-                                    subtracted = Convert.ToInt32(converted) - infos.Length - subtractAmount;//then subtract all 
+                                    subtracted = Convert.ToInt32(converted) - infos.Length - subtractAmount;//then subtract all
 
                                     File.Move(fileInfo.FullName, usersPath + subtracted.ToString() + fileInfo.Extension);
 
@@ -381,7 +393,7 @@ namespace ALLinOneRename
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
                 LoadSubDirs(subdirectory);
-            
+
             // Get all subdirectories
             root = secondPath;
             subdirectoryEntriesEntry = Directory.GetDirectories(root);
@@ -389,7 +401,7 @@ namespace ALLinOneRename
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
                 LoadSubDirs(subdirectory);
-            
+
             if (WasThereAnyInvalid)
                 AppendColoredTextToRtb(RtbCheckFiles, "\nProblem\n" + InvalidSeasonName + Environment.NewLine, alertColor);
             else
@@ -404,8 +416,8 @@ namespace ALLinOneRename
 
                 string[] subdirectoryEntries = Directory.GetDirectories(dir);
                 /*
-                        only check the episodes if it's the last folder inside a folder 
-                        and you can change to not enter the folder named "Plex Versions" 
+                        only check the episodes if it's the last folder inside a folder
+                        and you can change to not enter the folder named "Plex Versions"
                 */
 
                 if (subdirectoryEntries.Length < 1) // add "|| filterPath == subdirectoryEntries[0]" to if to filter folder
@@ -436,7 +448,7 @@ namespace ALLinOneRename
                             }
                         }
                     }
-                    if (thisTrySucess) 
+                    if (thisTrySucess)
                         AppendColoredTextToRtb(RtbCheckFiles, "Passed\n", approveColor);
                 }
                 else
@@ -453,7 +465,9 @@ namespace ALLinOneRename
                 if (IsFileFilter(name))
                     return true;
 
-                //int num = GetNumberOutOfStringV2(dict, NameNoType); //10 ms longer and won't work 
+                string subtitleHelper = "";
+                if (type == ".ass") subtitleHelper = ".eng";
+                //int num = GetNumberOutOfStringV2(dict, NameNoType); //10 ms longer and won't work
                 int num = GetNumberOutOfString(name, type);
 
                 //check if Season is a number
@@ -466,11 +480,11 @@ namespace ALLinOneRename
                 {
                     //episode is less then 10 -> there is a need for "0 helper"
                     if (num / 10 == 0)
-                        return IsFormatCorrect(NameNoType, SeriesName, Season, num, "E0");
+                        return IsFormatCorrect(NameNoType, SeriesName, Season, num, "E0", subtitleHelper);
 
                     //episode is more then 10 -> there is no need for "0 helper"
                     else
-                        return IsFormatCorrect(NameNoType, SeriesName, Season, num, "E");
+                        return IsFormatCorrect(NameNoType, SeriesName, Season, num, "E", subtitleHelper);
                 }
                 else
                 {
@@ -478,46 +492,46 @@ namespace ALLinOneRename
                     //"0 helper" is the 0 before the episode or the season if needed
                     if (num / 10 == 0)
                     {
-                        if (NameNoType == SeriesName + "S" + Season + "E0" + num)
+                        if (NameNoType == SeriesName + "S" + Season + "E0" + num + subtitleHelper)
                             return true;
-                        if (NameNoType == SeriesName + "S" + Season + "E0" + (num - 1) + "-" + "E0" + num)//more then 1 episode in a video 
+                        if (NameNoType == SeriesName + "S" + Season + "E0" + (num - 1) + "-" + "E0" + num + subtitleHelper)//more then 1 episode in a video
                             return true;
-                        if (NameNoType == SeriesName + "S" + Season + "E0" + num + " - part1")
+                        if (NameNoType == SeriesName + "S" + Season + "E0" + num + " - part1" + subtitleHelper)
                             return true;
-                        if (NameNoType == SeriesName + "S" + Season + "E0" + num + " - part2")
+                        if (NameNoType == SeriesName + "S" + Season + "E0" + num + " - part2" + subtitleHelper)
                             return true;
                     }
                     //episode is more then 10 -> there is no need for "0 helper"
                     else
                     {
-                        if (NameNoType == SeriesName + "S" + Season + "E" + num)
+                        if (NameNoType == SeriesName + "S" + Season + "E" + num + subtitleHelper)
                             return true;
-                        if (NameNoType == SeriesName + "S" + Season + "E" + (num - 1) + "-" + "E" + num)//more then 1 episode in a video 
+                        if (NameNoType == SeriesName + "S" + Season + "E" + (num - 1) + "-" + "E" + num + subtitleHelper)//more then 1 episode in a video
                             return true;
-                        if (NameNoType == SeriesName + "S" + Season + "E" + num + " - part1")
+                        if (NameNoType == SeriesName + "S" + Season + "E" + num + " - part1" + subtitleHelper)
                             return true;
-                        if (NameNoType == SeriesName + "S" + Season + "E" + num + " - part2")
+                        if (NameNoType == SeriesName + "S" + Season + "E" + num + " - part2" + subtitleHelper)
                             return true;
                     }
                 }
                 return false;
             }
 
-            bool IsFormatCorrect(string NameNoType, string SeriesName, String Season, int num, string EpisodeHolder)
+            bool IsFormatCorrect(string NameNoType, string SeriesName, String Season, int num, string EpisodeHolder, string subtitleHelper)
             {
                 if (Season == "00")
                 {
-                    if (NameNoType == SeriesName + "S" + Season + EpisodeHolder + num)
+                    if (NameNoType == SeriesName + "S" + Season + EpisodeHolder + num + subtitleHelper)
                         return true;
-                    if(NameNoType == SeriesName + "S" + Season + EpisodeHolder + num + "-" + EpisodeHolder + (num + 1))//more then 1 episode in a video 
+                    if (NameNoType == SeriesName + "S" + Season + EpisodeHolder + num + "-" + EpisodeHolder + (num + 1) + subtitleHelper)//more then 1 episode in a video
                         return true;
                 }
-                if (NameNoType == SeriesName + "S0" + Season + EpisodeHolder + num)
+                if (NameNoType == SeriesName + "S0" + Season + EpisodeHolder + num + subtitleHelper)
                     return true;
-                if (NameNoType == SeriesName + "S0" + Season + EpisodeHolder + (num-1) + "-" + EpisodeHolder + num)//more then 1 episode in a video 
+                if (NameNoType == SeriesName + "S0" + Season + EpisodeHolder + (num - 1) + "-" + EpisodeHolder + num + subtitleHelper)//more then 1 episode in a video
                     return true;
 
-                    return false;
+                return false;
             }
         }
 
@@ -528,7 +542,7 @@ namespace ALLinOneRename
                 DirectoryInfo directoryInfo = new DirectoryInfo(TbxPath.Text);
                 FileInfo[] infos = directoryInfo.GetFiles();
 
-                foreach(FileInfo fileInfo in infos)
+                foreach (FileInfo fileInfo in infos)
                 {
                     SetCursorDown();
                     if (IsFileFilter(fileInfo.Name))//custom icons to folders
@@ -559,17 +573,17 @@ namespace ALLinOneRename
 
         private int GetNumberOutOfString(string File_name, string file_type, bool isFirst = false, bool isLast = false, int[] numFilter = null, bool isSecond = false)
         {
-            // j is current index of the file_name 
+            // j is current index of the file_name
             int converted = 0;
             string numLast = "";//remember every number to know the last one
-            //if we find a number that is episode then i++ happen so we save the episode number and 
+            //if we find a number that is episode then i++ happen so we save the episode number and
             //on the next run when it find a season number or resolution number it will go to 0 on the next int not on the
             //episode number itself
             bool isSecondNumHere = false;//there is always first num first
             int numbers_together = 0;
             //when he find number he start to count so that it won't check if statement IF he is not at least 1 number
             int number_holder = -1;
-            //hold a number if it's the only number then 
+            //hold a number if it's the only number then
             string numbers = null;
             for (int j = 0; j < File_name.Length; j++)
             {
@@ -588,17 +602,18 @@ namespace ALLinOneRename
                         numbers_together++;
                         numbers += File_name[j];//start recording the numbers if they are found
                         break;
+
                     default:
                         if (numbers_together != 0)
                         {
-                            if (isFirst)//if number is first then return the number 
+                            if (isFirst)//if number is first then return the number
                                 return Convert.ToInt32(numbers);
                             if (isSecond)
                             {
-                                if(isSecondNumHere)
+                                if (isSecondNumHere)
                                     return Convert.ToInt32(numbers);
                                 isSecondNumHere = true;
-                            }  
+                            }
                             if (isLast)
                                 numLast = numbers;
 
@@ -673,7 +688,7 @@ namespace ALLinOneRename
         private void BtnTransferFilesFromDownload_Click(object sender, EventArgs e) // work in progress
         {
             /*
-                works when " FileName - someting.Extension " 
+                works when " FileName - someting.Extension "
                 takes the string "Filename - something" and split by("-")
                 then searches the last season in the folder if exist
                 then places that episode there
@@ -684,18 +699,17 @@ namespace ALLinOneRename
             string downloadPath = GetPathsFromXmlFile("Download");
 
             //if (File.Exists("Dictionary"))
-            
+
             string[] subdirectoryEntriesEntry = Directory.GetDirectories(downloadPath);
 
             // Loop through them to see if they have any other subdirectories
             foreach (string subdirectory in subdirectoryEntriesEntry)
                 LoadSubDirs(subdirectory);
-            
+
             //else
-           
+
             //    AppendColoredTextToRtb(RtbRenamedText, "Please use the Create button\n", Color.DarkRed);
-            
-            
+
             void LoadSubDirs(string dir)
             {
                 RtbRenamedText.AppendText(dir + Environment.NewLine);//plain black text faster to write
@@ -734,7 +748,7 @@ namespace ALLinOneRename
                     SetCursorDown();
                     AppendColoredTextToRtb(RtbRenamedText, "Moved file: " + fileInfo.Name, Color.Blue);
                 }
-                if(didFindDirectory)
+                if (didFindDirectory)
                     Directory.Delete(dir);
                 else
                 {
@@ -751,12 +765,12 @@ namespace ALLinOneRename
                 //find the series then the max season
                 foreach (string directory in currentSubdirectory)
                 {
-                    if(dest + SeriesName == directory)
+                    if (dest + SeriesName == directory)
                     {
                         int j = dest.Length + SeriesName.Length + 1 + 6;
                         string[] seasons = Directory.GetDirectories(directory);
                         int[] seasonsInNum = new int[seasons.Length];
-                        for(int i = 0; i < seasons.Length; i++)
+                        for (int i = 0; i < seasons.Length; i++)
                         {
                             seasonsInNum[i] = Convert.ToInt32(seasons[i].Substring(dest.Length + SeriesName.Length + 7));//7 is the slash and the season
                         }
@@ -771,7 +785,7 @@ namespace ALLinOneRename
             {
                 string[] nameSplited = directoryName.Split('-');
                 string result = "";
-                for(int i = 0; i < nameSplited.Length - 1; i++)
+                for (int i = 0; i < nameSplited.Length - 1; i++)
                 {
                     result = result + nameSplited[i] + "-";
                 }
@@ -781,7 +795,6 @@ namespace ALLinOneRename
 
                 return result;
             }
-
         }
 
         private string[] FormatTextIntoLines(string text)
@@ -852,7 +865,6 @@ namespace ALLinOneRename
 
         private void BtnCreateHashTable_Click(object sender, EventArgs e)
         {
-
             //get Paths from Xml file
             string firstPath = GetPathsFromXmlFile("Anime");
             string secondPath = GetPathsFromXmlFile("Anime Not");
@@ -885,7 +897,6 @@ namespace ALLinOneRename
 
             string GetHash(HashAlgorithm hashAlgorithm, string input)
             {
-
                 // Convert the input string to a byte array and compute the hash.
                 byte[] data = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
 
@@ -917,15 +928,15 @@ namespace ALLinOneRename
                 gets all the numbers in the file names and count them
                 use the the most NOT used number
                 that probably the number i need
-                
+
                 exeptions and solutions:
-                
+
                 1.
                 if there is more then one most NOT used number
                 but there is a most used number that is 1 above every other number
                 (example: [AniFilm] Tonari no Kaibutsu-kun [TV] [13 of 13] [HDTVRip 1280x720 x264] [Ru Jp] [DemonOFmooN & MezIdA],
                 all the other files are the same stracture just the episode is changing - "1 of 13" and so on)
-                solution will be: 
+                solution will be:
                 to check if there is more then 1 most NOT used number
                 and if true then use the most used number
             */
@@ -934,7 +945,6 @@ namespace ALLinOneRename
 
             for (int i = 0; i < nums.Length; i++)
             {
-
                 dict.TryGetValue(nums[i], out int val);
                 if (val == 1)
                     return Convert.ToInt32(nums[i]);
@@ -951,7 +961,7 @@ namespace ALLinOneRename
                     index = i;
                 }
             }
-                return Convert.ToInt32(nums[index]);
+            return Convert.ToInt32(nums[index]);
         }
 
         private Dictionary<string, int> CreateDictionary(string path)
@@ -967,7 +977,7 @@ namespace ALLinOneRename
                 ///get all the numbers from a string
                 string[] numbers = Regex.Split(fileInfo.Name, @"\D+");
                 int val;
-                for(int i = 0; i < numbers.Length; i++)
+                for (int i = 0; i < numbers.Length; i++)
                 {
                     if (numbers[i] == "") continue;
                     if (dict.ContainsKey(numbers[i]))
@@ -1003,6 +1013,5 @@ namespace ALLinOneRename
             } while (reader.ReadToFollowing("path"));
             return "Fail";
         }
-
     }
 }
