@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -466,9 +467,10 @@ namespace ALLinOneRename
                     return true;
 
                 string subtitleHelper = "";
-                if (type == ".ass") subtitleHelper = ".eng";
+                if (type == ".ass") subtitleHelper = ".eng";//hardcoded
                 //int num = GetNumberOutOfStringV2(dict, NameNoType); //10 ms longer and won't work
-                int num = GetNumberOutOfString(name, type);
+                int num = GetNumberOutOfStringForCheckFiles (name);
+                //int num = GetNumberOutOfString(name, type);
 
                 //check if Season is a number
                 bool bNum = int.TryParse(Season, out int i);
@@ -1012,6 +1014,33 @@ namespace ALLinOneRename
                 }
             } while (reader.ReadToFollowing("path"));
             return "Fail";
+        }
+
+        private int GetNumberOutOfStringForCheckFiles(string name)
+        {
+            //finds the episode number
+            //86 - Eighty Six - S01E01.mkv
+            //Gintama - S01E03.mkv
+
+            //debug
+            //if (name == "Avatar The Last Airbender - S02E19-E20.mkv")
+            //    TbxSubtractNumber.Text = "";
+            string final_string = "";
+            var matches = Regex.Matches(name, @"\d+");
+            if (matches.Count > 1)
+            {
+                string[] DashSeparator = name.Split('-');
+                matches = Regex.Matches(DashSeparator[DashSeparator.Length - 1], @"\d+");
+                if (matches.Count > 1)
+                    final_string = matches[1].Value;
+                else
+                    final_string = matches[0].Value;
+            }
+            else
+            {
+                final_string = matches[0].Value;
+            }
+            return int.Parse(final_string);
         }
     }
 }
